@@ -5,7 +5,7 @@
 - [x] PROMPT 1: Estrutura Base e Configuração
 - [x] PROMPT 2: Sistema de Layout e Navegação Desktop
 - [x] PROMPT 3: Sistema de Layout e Navegação Mobile
-- [ ] PROMPT 4: Context Global e Gerenciamento de Estado
+- [x] PROMPT 4: Context Global e Gerenciamento de Estado
 - [ ] PROMPT 5: Cards de Resumo Financeiro
 - [ ] PROMPT 6: Header do Dashboard com Controles
 - [ ] PROMPT 7: Carrossel de Gastos por Categoria
@@ -226,7 +226,7 @@
 - Componente HeaderMobile fixo no topo
   - Aparece apenas em viewports menores que 1024px (lg:hidden)
   - Ocupa largura total e permanece visível durante scroll
-  - Altura fixa de 64px (h-16)
+  - Altura fixa de 56px (h-[56px])
   - Fundo branco com borda inferior sutil
   - Posicionado fixo no topo (fixed top-0)
 - Logotipo no header mobile
@@ -275,7 +275,7 @@
   - Nunca aparecem simultaneamente
   - Breakpoint lg configurado explicitamente como 1024px no tailwind.config.js
 - Spacer para compensar header fixo
-  - Altura de 64px (h-16) no conteúdo principal
+  - Altura de 56px (h-[56px]) no conteúdo principal
   - Aparece apenas em mobile (< 1024px) - lg:hidden
   - Previne conteúdo de ficar escondido atrás do header fixo
 
@@ -299,7 +299,7 @@
   - `py-4` (16px) - Padding vertical do header e menu
   - `gap-3` (12px) - Espaçamento entre itens de navegação
   - `gap-2` (8px) - Espaçamento entre ícone e texto no logo (fallback usando gap padrão do Tailwind)
-  - `h-16` (64px) - Altura do header e spacer
+  - `h-[56px]` (56px) - Altura do header e spacer
   - `w-10 h-10` (40px) - Tamanho do avatar
 - Tipografia:
   - `text-heading-xs` - Logo "Mycash+"
@@ -345,3 +345,110 @@
 - Spacer adicionado para compensar header fixo e prevenir conteúdo escondido
 - Menu fecha corretamente ao clicar em item, X ou overlay
 - Navegação funcional entre todas as seções
+
+---
+
+## PROMPT 4: Context Global e Gerenciamento de Estado
+
+**Status**: ✅ | **Data**: 04/01/2025 | **Build**: ✅ (1 tentativa)
+
+### Implementado
+
+- FinanceProvider criado como Context Provider
+  - Colocado no nível mais alto da árvore de componentes (App.tsx)
+  - Disponibiliza estado global para toda a aplicação
+  - Implementa interface FinanceContextType com todas as funcionalidades
+- Cinco arrays principais de estado
+  - `transactions`: array de transações financeiras
+  - `goals`: array de objetivos financeiros
+  - `creditCards`: array de cartões de crédito
+  - `bankAccounts`: array de contas bancárias
+  - `familyMembers`: array de membros da família
+  - Todos tipados corretamente com TypeScript
+- Funções CRUD para cada entidade
+  - `addTransaction`, `updateTransaction`, `deleteTransaction`
+  - `addGoal`, `updateGoal`, `deleteGoal`
+  - `addCreditCard`, `updateCreditCard`, `deleteCreditCard`
+  - `addBankAccount`, `updateBankAccount`, `deleteBankAccount`
+  - `addFamilyMember`, `updateFamilyMember`, `deleteFamilyMember`
+  - Todas as funções atualizam os arrays no estado e causam re-renderização
+- Estados para filtros globais
+  - `selectedMember`: ID do membro selecionado ou null
+  - `dateRange`: objeto com startDate e endDate (ambos podem ser null)
+  - `transactionType`: string podendo ser "all", "income" ou "expense"
+  - `searchText`: string para busca textual
+- Funções de filtro
+  - `setSelectedMember`: define membro selecionado
+  - `setDateRange`: define intervalo de datas
+  - `setTransactionType`: define tipo de transação
+  - `setSearchText`: define texto de busca
+- Funções de cálculo derivadas
+  - `getFilteredTransactions`: retorna array de transações após aplicar todos os filtros ativos
+    - Filtra por membro (se selecionado)
+    - Filtra por tipo (all/income/expense)
+    - Filtra por período (se startDate e endDate definidos)
+    - Filtra por busca textual (case-insensitive em description e category)
+  - `calculateTotalBalance`: soma saldos de contas e subtrai faturas de cartões
+  - `calculateIncomeForPeriod`: soma todas as receitas do período filtrado
+  - `calculateExpensesForPeriod`: soma todas as despesas do período filtrado
+  - `calculateExpensesByCategory`: agrupa despesas por categoria e retorna array ordenado por valor decrescente
+  - `calculateCategoryPercentage`: calcula percentual de uma categoria em relação à receita total (trata divisão por zero)
+  - `calculateSavingsRate`: calcula (receitas - despesas) / receitas × 100 (trata divisão por zero)
+- Hook customizado useFinance
+  - Encapsula useContext(FinanceContext)
+  - Fornece acesso limpo a todo o estado e funções
+  - Lança erro se usado fora do FinanceProvider
+  - Único ponto de acesso ao contexto em toda a aplicação
+- Dados mock realistas
+  - Três membros da família: Pai (João Silva, R$ 8.500), Mãe (Maria Silva, R$ 6.200), Filho (Pedro Silva)
+  - Três cartões de crédito: Nubank (limite R$ 5.000, fatura R$ 3.200, tema lime), Itaú (limite R$ 8.000, fatura R$ 4.500, tema black), Bradesco (limite R$ 3.000, fatura R$ 1.200, tema white)
+  - Duas contas bancárias: Nubank (R$ 12.500), Itaú Poupança (R$ 8.500)
+  - Vinte a trinta transações distribuídas nos últimos 3 meses
+    - Receitas: Salários variados (R$ 8500, R$ 6200, R$ 3500, etc)
+    - Despesas: Alimentação, Transporte, Moradia, Saúde, Educação, Lazer, Vestuário, Outros
+    - Mix de transações completadas e pendentes
+    - Mix de transações à vista e parceladas
+  - Quatro objetivos variados: Viagem para Europa (R$ 30.000 meta, R$ 12.500 atual), Trocar o Carro (R$ 50.000 meta, R$ 18.000 atual), Reserva de Emergência (R$ 60.000 meta, R$ 35.000 atual), Reforma da Casa (R$ 25.000 meta, R$ 8.500 atual)
+  - Categorias padrão brasileiras para receitas e despesas
+- Integração do FinanceProvider no App.tsx
+  - Provider envolvendo BrowserRouter e Routes
+  - Disponibiliza contexto para todos os componentes filhos
+  - Dados mock carregados automaticamente no estado inicial
+
+### Tokens
+
+**Semânticas**: N/A (ainda não aplicadas)
+
+**Primitivas**: N/A (contexto não utiliza tokens visuais diretamente)
+
+**Conversões**: N/A (apenas lógica de negócio)
+
+### Build
+
+**Tentativas**: 1 | **Erros**: 0 | **Status**: ✅ Sucesso
+
+### Commit
+
+**Hash**: (será gerado após commit)  
+**Mensagem**: feat: context global e gerenciamento de estado  
+**Status**: ⏳ Commit será realizado após documentação
+
+### Arquivos Criados
+
+- `src/contexts/FinanceContext.tsx` - Context Provider e hook useFinance
+- `src/utils/mockData.ts` - Função para gerar dados mock realistas
+- Arquivos modificados:
+  - `src/App.tsx` - Integração do FinanceProvider
+  - `package.json` - Adicionada dependência uuid e @types/uuid
+
+### Notas
+
+- FinanceProvider implementado seguindo padrões React Context
+- Todos os estados tipados corretamente com TypeScript
+- Funções CRUD implementadas de forma imutável
+- Funções de cálculo derivadas aplicam filtros automaticamente
+- Dados mock realistas seguindo especificações
+- Hook useFinance como único ponto de acesso ao contexto
+- Tratamento de divisão por zero em funções de cálculo
+- Dados mock distribuídos nos últimos 3 meses usando datas aleatórias
+- Uso de uuid para geração de IDs únicos
