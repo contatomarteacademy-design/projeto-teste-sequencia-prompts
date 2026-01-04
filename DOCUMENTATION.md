@@ -528,7 +528,7 @@
   - `text-heading-sm` - Valores de receita/despesa
   - `text-label-md` - Labels de receita/despesa
 - Shapes:
-  - `rounded-[100px]` - Bordas arredondadas dos cards (pill shape)
+  - `rounded-xl` (20px) - Bordas arredondadas dos cards
   - `rounded-full` - Círculos (ícones, badge)
 - Efeitos:
   - `blur-3xl` - Blur intenso para círculo decorativo
