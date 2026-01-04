@@ -3,7 +3,7 @@
 ## Progresso
 
 - [x] PROMPT 1: Estrutura Base e Configuração
-- [ ] PROMPT 2: Sistema de Layout e Navegação Desktop
+- [x] PROMPT 2: Sistema de Layout e Navegação Desktop
 - [ ] PROMPT 3: Sistema de Layout e Navegação Mobile
 - [ ] PROMPT 4: Context Global e Gerenciamento de Estado
 - [ ] PROMPT 5: Cards de Resumo Financeiro
