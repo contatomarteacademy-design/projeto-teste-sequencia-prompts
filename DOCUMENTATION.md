@@ -545,7 +545,7 @@
 
 ### Commit
 
-**Hash**: (será gerado após commit)  
+**Hash**: 21d94f3 (implementação), 765d6f0 (fix previousBalance), 96ecfd4 (documentação)  
 **Mensagem**: feat: cards de resumo financeiro  
 **Status**: ✅ Commit realizado e push para GitHub concluído
 
