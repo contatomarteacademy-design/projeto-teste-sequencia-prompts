@@ -6,7 +6,6 @@ export default function BalanceCard() {
   const { calculateTotalBalance } = useFinance();
   const totalBalance = calculateTotalBalance();
   const [displayValue, setDisplayValue] = useState(0);
-  const [previousBalance, setPreviousBalance] = useState(totalBalance);
 
   // Calcular crescimento percentual comparado ao mês anterior
   // Por enquanto, simulando com cálculo baseado no saldo atual
@@ -36,7 +35,6 @@ export default function BalanceCard() {
         requestAnimationFrame(animate);
       } else {
         setDisplayValue(target);
-        setPreviousBalance(target);
       }
     };
 
