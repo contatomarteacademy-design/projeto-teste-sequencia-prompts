@@ -128,17 +128,13 @@ export default function Sidebar() {
                     className={`
                       flex
                       items-center
-                      gap-3
-                      px-6
-                      py-4
                       rounded-[100px]
                       transition-all
                       duration-200
-                      w-full
+                      ${isExpanded ? 'gap-3 px-6 py-4 w-full justify-start' : 'p-3 justify-center min-w-[48px]'}
                       ${active ? 'bg-neutral-1100' : 'bg-transparent'}
                       ${active ? 'text-neutral-0' : 'text-neutral-1100'}
                       hover:opacity-80
-                      ${isExpanded ? 'justify-start' : 'justify-center'}
                     `}
                   >
                     <Icon
@@ -165,17 +161,13 @@ export default function Sidebar() {
               className={`
                 flex
                 items-center
-                gap-3
-                px-6
-                py-4
                 rounded-[100px]
                 bg-transparent
                 text-red-500
                 transition-all
                 duration-200
-                w-full
                 hover:opacity-80
-                ${isExpanded ? 'justify-start' : 'justify-center'}
+                ${isExpanded ? 'gap-3 px-6 py-4 w-full justify-start' : 'p-3 justify-center min-w-[48px]'}
               `}
             >
               <SignOutIcon size={24} className="text-red-500" />
