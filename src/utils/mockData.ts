@@ -51,14 +51,14 @@ export const generateMockData = () => {
       id: uuidv4(),
       name: 'Conta Corrente Nubank',
       balance: 12500,
-      type: 'conta-corrente',
+      type: 'checking',
       bankName: 'Nubank',
     },
     {
       id: uuidv4(),
       name: 'Conta Poupança Itaú',
       balance: 8500,
-      type: 'poupanca',
+      type: 'savings',
       bankName: 'Itaú',
     },
   ];
