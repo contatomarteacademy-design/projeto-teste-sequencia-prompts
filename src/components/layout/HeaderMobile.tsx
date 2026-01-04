@@ -48,7 +48,7 @@ export default function HeaderMobile() {
   return (
     <>
       {/* Header Mobile - Fixo no topo */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-neutral-0 border-b border-neutral-300 h-16 flex items-center justify-between px-4 lg:hidden">
+      <header className="fixed top-0 left-0 right-0 z-40 bg-neutral-0 border-b border-neutral-300 h-[56px] flex items-center justify-between px-4 lg:hidden">
         {/* Logo */}
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-brand-500 rounded-full" />
@@ -108,9 +108,9 @@ export default function HeaderMobile() {
         </div>
 
         {/* Conteúdo do Menu */}
-        <div className="px-4 py-4 max-h-[calc(100vh-64px)] overflow-y-auto">
+        <div className="px-4 py-4 max-h-[calc(100vh-56px)] overflow-y-auto">
           {/* Lista de Navegação */}
-          <nav className="flex flex-col gap-2 mb-4">
+          <nav className="flex flex-col gap-3 mb-4">
             {navItems.map((item) => {
               const active = isActive(item.path);
               const Icon = item.icon;
@@ -163,7 +163,7 @@ export default function HeaderMobile() {
       </div>
 
       {/* Spacer para conteúdo principal (compensar altura do header fixo) */}
-      <div className="h-16 lg:hidden" />
+      <div className="h-[56px] lg:hidden" />
     </>
   );
 }
