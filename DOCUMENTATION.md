@@ -4,7 +4,7 @@
 
 - [x] PROMPT 1: Estrutura Base e Configuração
 - [x] PROMPT 2: Sistema de Layout e Navegação Desktop
-- [ ] PROMPT 3: Sistema de Layout e Navegação Mobile
+- [x] PROMPT 3: Sistema de Layout e Navegação Mobile
 - [ ] PROMPT 4: Context Global e Gerenciamento de Estado
 - [ ] PROMPT 5: Cards de Resumo Financeiro
 - [ ] PROMPT 6: Header do Dashboard com Controles
