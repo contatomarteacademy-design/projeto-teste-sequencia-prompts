@@ -46,7 +46,7 @@ export default function ExpenseCard() {
   };
 
   return (
-    <div className="bg-neutral-0 border border-neutral-300 rounded-xl p-6">
+    <div className="bg-neutral-0 border border-neutral-300 rounded-xl p-6 h-full flex flex-col">
       <div className="flex items-start justify-between mb-4">
         {/* Label */}
         <h3 className="text-label-md text-neutral-500 font-semibold">

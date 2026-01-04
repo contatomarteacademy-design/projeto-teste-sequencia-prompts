@@ -50,7 +50,7 @@ export default function BalanceCard() {
   };
 
   return (
-    <div className="relative bg-neutral-1100 rounded-xl p-6 overflow-hidden">
+    <div className="relative bg-neutral-1100 rounded-xl p-6 overflow-hidden h-full flex flex-col">
       {/* Círculo verde-limão desfocado no fundo */}
       <div
         className="absolute -right-16 -top-16 w-64 h-64 bg-brand-500 rounded-full opacity-20 blur-3xl"
