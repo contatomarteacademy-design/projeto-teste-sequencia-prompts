@@ -143,7 +143,7 @@ export default function Sidebar() {
                   >
                     <Icon
                       size={24}
-                      className={active ? 'text-brand-500' : 'text-neutral-1100'}
+                      className={active ? 'text-neutral-0' : 'text-neutral-1100'}
                     />
                     {isExpanded && (
                       <span className="text-label-lg font-semibold">
