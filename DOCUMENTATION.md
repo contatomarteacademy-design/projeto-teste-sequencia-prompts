@@ -116,3 +116,102 @@
 - React Router configurado para SPA com 5 rotas principais
 - Projeto está pronto para desenvolvimento dos componentes
 
+---
+
+## PROMPT 2: Sistema de Layout e Navegação Desktop
+
+**Status**: ✅ | **Data**: 04/01/2025 | **Build**: ✅ (1 tentativa)
+
+### Implementado
+
+- Componente Sidebar com dois estados visuais (expandido e colapsado)
+  - Estado expandido: mostra logo completo "Mycash+", nomes das seções e informações completas do perfil
+  - Estado colapsado: mostra apenas ícone do logo, ícones das seções e avatar do perfil
+- Botão de alternância circular na borda direita da sidebar
+  - Ícone muda entre seta esquerda (expandida) e seta direita (colapsada)
+  - Posicionado absolutamente com sombra e hover
+- Transições suaves entre estados (300ms duration)
+  - Largura da sidebar anima entre 414px (expandida) e 80px (colapsada)
+  - Conteúdo principal ajusta margem esquerda automaticamente
+  - Opacidade do logo e texto animam suavemente
+- Sistema de tooltips quando sidebar está colapsada
+  - Tooltips aparecem ao passar mouse sobre itens de navegação
+  - Aparecem à direita do item com delay de 200ms
+  - Fundo preto com texto branco
+- Comportamento de item ativo
+  - Item da seção atual tem fundo preto (neutral-1100)
+  - Texto branco (neutral-0)
+  - Ícone verde-limão (brand-500)
+  - Itens inativos têm fundo transparente, texto preto e ícone preto
+- Integração com React Router
+  - Navegação funcional entre todas as seções
+  - Detecção automática de rota ativa
+  - 5 rotas principais: Home, Objetivos, Cartões, Transações, Perfil
+- Componente AppLayout criado
+  - Wrapper principal que inclui Sidebar e conteúdo
+  - Sidebar aparece apenas em desktop (acima de 1024px)
+  - Layout responsivo preparado para mobile (PROMPT 3)
+- Componentes de ícones SVG inline criados
+  - HomeIcon, GolfIcon, CreditCardIcon, TransactionsIcon, ProfileIcon, SignOutIcon
+  - ChevronLeftIcon, ChevronRightIcon para toggle
+  - Todos usando SVG inline sem dependências externas
+
+### Tokens
+
+**Semânticas**: N/A (ainda não aplicadas)
+
+**Primitivas** (utilizadas):
+- Cores:
+  - `bg-neutral-0` - Fundo branco da sidebar
+  - `bg-neutral-1100` - Fundo preto para item ativo
+  - `text-neutral-0` - Texto branco em item ativo
+  - `text-neutral-1100` - Texto preto padrão
+  - `bg-brand-500` - Verde-limão para ícone ativo e logo
+  - `text-red-500` - Vermelho para botão Sair
+  - `bg-neutral-200` - Fundo cinza claro do card de perfil
+  - `bg-neutral-300` - Fundo cinza médio para avatar
+- Espaçamentos:
+  - `px-16` (64px) - Padding horizontal quando expandida
+  - `px-4` (16px) - Padding horizontal quando colapsada
+  - `py-8` (32px) - Padding vertical
+  - `gap-3` (12px) - Espaçamento entre itens de navegação
+  - `gap-16` (64px) - Espaçamento entre logo e navegação
+  - `gap-4` (16px) - Espaçamento no rodapé
+- Tipografia:
+  - `text-heading-xs` - Logo "Mycash+"
+  - `text-label-lg` - Labels de navegação
+  - `text-paragraph-md` - Email no card de perfil
+- Shapes:
+  - `rounded-[100px]` - Botões de navegação (pill shape)
+  - `rounded-xl` (20px) - Card de perfil
+  - `rounded-full` - Avatar circular
+
+**Conversões**: N/A (todos os valores usam tokens do design system)
+
+### Build
+
+**Tentativas**: 1 | **Erros**: 0 | **Status**: ✅ Sucesso
+
+### Commit
+
+**Hash**: e5c4ca9  
+**Mensagem**: feat: sistema de layout e navegação desktop com sidebar  
+**Status**: ✅ Commit realizado e push para GitHub concluído
+
+### Arquivos Criados
+
+- `src/components/layout/Sidebar.tsx` - Componente principal da sidebar
+- `src/components/layout/AppLayout.tsx` - Layout wrapper com sidebar
+- `src/components/ui/Icons.tsx` - Componentes de ícones SVG inline
+- Arquivos modificados:
+  - `src/App.tsx` - Integração do AppLayout com rotas
+
+### Notas
+
+- Sidebar implementada seguindo design do Figma
+- Estados expandido/colapsado funcionando perfeitamente
+- Tooltips implementados com delay para melhor UX
+- Item ativo usa ícone verde-limão conforme especificado no prompt
+- Layout preparado para responsividade (mobile será implementado no PROMPT 3)
+- Todos os estilos usam exclusivamente variáveis do design system
+
