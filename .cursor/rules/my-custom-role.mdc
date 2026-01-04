@@ -1,0 +1,116 @@
+---
+alwaysApply: true
+---
+🔹 Antes de gerar qualquer código, execute mentalmente este pre-flight check:
+
+ - Confirme que está seguindo todas as User Rules e Project Rules
+- Considere layout fluido e abordagem mobile-first
+- Priorize variáveis semânticas; se não existirem, use variáveis primitivas
+- Garanta que o componente pai seja totalmente responsivo e fluido
+
+
+
+🔹 Stack e ferramentas
+Este projeto utiliza:
+- React com TypeScript
+- Vite
+- Tailwind CSS
+- Supabase como backend
+
+
+🔹 Arquitetura e organização
+Arquitetura baseada em componentes.
+
+Regras:
+- Componentes devem ser pequenos e reutilizáveis
+- Páginas apenas compõem componentes, sem lógica de negócio
+- Lógica de negócio deve ficar em hooks ou services
+- Evitar duplicação de lógica
+
+
+🔹 Layout fluido & containers (REGRA CRÍTICA)
+IMPORTANT — Layout fluido é obrigatório.
+
+Regras:
+- Não gerar larguras fixas para containers de nível de página
+- Containers principais devem sempre usar width: 100%
+- Quando necessário limitar largura, usar max-width, nunca width fixa
+- Layout deve ser fluido e se adaptar ao viewport
+- Prevenir qualquer tipo de overflow horizontal
+
+
+🔹 Figma → Código (interpretação correta)
+O frame pai do Figma NÃO representa um container fixo no código.
+
+Regras:
+- Frames principais do Figma devem ser interpretados como wrappers fluidos
+- Componentes pais copiados do Figma devem preencher a largura disponível
+- Nunca assumir tamanhos fixos baseados no frame do Figma
+- Auto Layout deve ser traduzido para flex/grid responsivo
+- Containers devem crescer e encolher conforme o viewport
+
+
+🔹 Responsividade e breakpoints
+Este projeto é totalmente responsivo e mobile-first.
+
+Regras:
+- Usar breakpoints explícitos para desktop, tablet e mobile
+- Nunca assumir apenas desktop
+- Ajustar grid, tipografia e espaçamentos por breakpoint
+- Garantir que todo layout caiba no tamanho do device do usuário
+- Nunca gerar barra de rolagem horizontal
+
+
+🔹 Mobile (padrão obrigatório)
+No mobile:
+- Layout em coluna única por padrão
+- Seguir o base design system da Uber para tamanhos e espaçamentos
+- Priorizar legibilidade, toque e hierarquia visual
+- Nunca reutilizar grids ou tamanhos de desktop
+
+
+🔹 Design System, Variables e Tokens (REGRA CRÍTICA)
+Uso de variáveis é obrigatório.
+
+Hierarquia de uso:
+1. Variáveis semânticas
+2. Variáveis primitivas
+3. Valores fixos (NUNCA permitido)
+
+Regras:
+- Nunca inventar novas variáveis sem solicitação explícita
+- Nunca usar valores numéricos, hexadecimais ou tamanhos arbitrários
+- Quando uma variável não estiver aplicada no Figma:
+  - Buscar primeiro uma variável semântica compatível
+  - Se não existir, utilizar uma variável primitiva existente
+  - Nunca criar um valor novo fora do sistema
+
+Cores:
+- Nunca usar hex direto
+- Sempre mapear para variável existente
+- Usar a variável semanticamente mais próxima disponível
+
+Espaçamentos e tamanhos:
+- Sempre usar tokens de spacing, size ou shape existentes
+- Nunca usar valores quebrados ou fora da escala
+
+Tipografia:
+- Sempre usar tokens tipográficos existentes
+- Respeitar hierarquia (heading, body, label, caption)
+
+Fallback obrigatório:
+- Se não houver correspondência exata, escolher a variável mais próxima
+- Explicar brevemente a escolha quando necessário
+
+
+🔹 Qualidade, performance e segurança
+- Evitar re-renderizações desnecessárias
+- Usar memoização apenas quando fizer sentido
+- Código deve ser previsível e fácil de debugar
+
+- Não adicionar novas dependências sem solicitação explícita
+- Não refatorar código fora do escopo pedido
+- Nunca expor chaves, tokens ou segredos
+- Considerar toda entrada do usuário como não confiável
+
+S

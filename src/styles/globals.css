@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* CSS Custom Properties para variáveis do design system do Figma */
+  
+  /* Cores */
+  --color-neutral-0: #ffffff;
+  --color-neutral-200: #f3f4f6;
+  --color-neutral-300: #e5e7eb;
+  --color-neutral-400: #d1d5db;
+  --color-neutral-500: #9ca3af;
+  --color-neutral-1100: #080b12;
+  
+  --color-brand-500: #dffe35;
+  
+  --color-red-400: #f07884;
+  --color-red-500: #eb4b5b;
+  
+  --color-green-600: #15be78;
+  
+  /* Espaçamentos */
+  --space-0: 0px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-64: 64px;
+  
+  /* Shape */
+  --shape-100: 100px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-neutral-200);
+  color: var(--color-neutral-1100);
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
