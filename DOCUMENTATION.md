@@ -141,7 +141,7 @@
 - Comportamento de item ativo
   - Item da seção atual tem fundo preto (neutral-1100)
   - Texto branco (neutral-0)
-  - Ícone verde-limão (brand-500)
+  - Ícone branco (neutral-0) - corrigido de verde-limão para branco conforme Figma
   - Itens inativos têm fundo transparente, texto preto e ícone preto
 - Integração com React Router
   - Navegação funcional entre todas as seções
@@ -151,10 +151,10 @@
   - Wrapper principal que inclui Sidebar e conteúdo
   - Sidebar aparece apenas em desktop (acima de 1024px)
   - Layout responsivo preparado para mobile (PROMPT 3)
-- Componentes de ícones SVG inline criados
+- Componentes de ícones usando react-icons
   - HomeIcon, GolfIcon, CreditCardIcon, TransactionsIcon, ProfileIcon, SignOutIcon
   - ChevronLeftIcon, ChevronRightIcon para toggle
-  - Todos usando SVG inline sem dependências externas
+  - Todos usando react-icons (Feather Icons)
 
 ### Tokens
 
@@ -166,7 +166,7 @@
   - `bg-neutral-1100` - Fundo preto para item ativo
   - `text-neutral-0` - Texto branco em item ativo
   - `text-neutral-1100` - Texto preto padrão
-  - `bg-brand-500` - Verde-limão para ícone ativo e logo
+  - `bg-brand-500` - Verde-limão para logo
   - `text-red-500` - Vermelho para botão Sair
   - `bg-neutral-200` - Fundo cinza claro do card de perfil
   - `bg-neutral-300` - Fundo cinza médio para avatar
@@ -202,7 +202,7 @@
 
 - `src/components/layout/Sidebar.tsx` - Componente principal da sidebar
 - `src/components/layout/AppLayout.tsx` - Layout wrapper com sidebar
-- `src/components/ui/Icons.tsx` - Componentes de ícones SVG inline
+- `src/components/ui/Icons.tsx` - Re-export de ícones react-icons
 - Arquivos modificados:
   - `src/App.tsx` - Integração do AppLayout com rotas
 
@@ -211,7 +211,137 @@
 - Sidebar implementada seguindo design do Figma
 - Estados expandido/colapsado funcionando perfeitamente
 - Tooltips implementados com delay para melhor UX
-- Item ativo usa ícone verde-limão conforme especificado no prompt
-- Layout preparado para responsividade (mobile será implementado no PROMPT 3)
+- Item ativo usa ícone branco conforme design do Figma
+- Layout preparado para responsividade (mobile implementado no PROMPT 3)
 - Todos os estilos usam exclusivamente variáveis do design system
 
+---
+
+## PROMPT 3: Sistema de Layout e Navegação Mobile
+
+**Status**: ✅ | **Data**: 04/01/2025 | **Build**: ✅ (1 tentativa)
+
+### Implementado
+
+- Componente HeaderMobile fixo no topo
+  - Aparece apenas em viewports menores que 1024px (lg:hidden)
+  - Ocupa largura total e permanece visível durante scroll
+  - Altura fixa de 64px (h-16)
+  - Fundo branco com borda inferior sutil
+  - Posicionado fixo no topo (fixed top-0)
+- Logotipo no header mobile
+  - Logo "Mycash+" à esquerda em tamanho apropriado
+  - Ícone verde-limão + texto
+- Avatar do usuário no header mobile
+  - Avatar clicável à direita (40px x 40px)
+  - Funciona como trigger para menu dropdown
+  - Área de toque adequada (w-10 h-10 = 40px)
+  - Focus ring para acessibilidade
+- Componente MenuDropdown
+  - Aparece quando avatar é tocado
+  - Desliza de cima para baixo com animação suave (300ms, ease-out)
+  - Cobre conteúdo abaixo sem ocupar tela inteira (não é fullscreen)
+  - Fundo branco com sombra elevada
+  - Posicionado fixo no topo (fixed top-0)
+- Header do menu dropdown
+  - Título "Menu" à esquerda
+  - Botão X no canto superior direito para fechar
+  - Área de toque adequada (44x44px)
+  - Borda inferior separando do conteúdo
+- Lista de itens de navegação no dropdown
+  - Todos os itens de navegação (Home, Objetivos, Cartões, Transações, Perfil)
+  - Ícone + texto para cada item
+  - Item ativo destacado (fundo preto, texto branco, ícone branco)
+  - Itens inativos (fundo transparente, texto preto, ícone preto)
+  - Espaçamento adequado entre itens (gap-3 = 12px)
+- Botão "Sair" no dropdown
+  - Posicionado na parte inferior do menu
+  - Cor vermelha (red-500)
+  - Ícone + texto
+- Lógica de fechamento do menu
+  - Fecha ao clicar em qualquer item de navegação
+  - Fecha ao clicar no botão X
+  - Fecha ao clicar/tocar no overlay escuro semi-transparente
+  - Transição suave ao fechar (slide-up)
+- Overlay escuro semi-transparente
+  - Aparece quando menu está aberto
+  - Fundo preto com opacidade 50% (bg-neutral-1100 bg-opacity-50)
+  - Cobre toda a tela atrás do menu (fixed inset-0)
+  - Clique no overlay fecha o menu
+  - z-index adequado (z-50)
+- Breakpoints configurados corretamente
+  - Desktop (>= 1024px): apenas sidebar aparece (hidden lg:block)
+  - Mobile/Tablet (< 1024px): apenas header mobile aparece (lg:hidden)
+  - Nunca aparecem simultaneamente
+  - Breakpoint lg configurado explicitamente como 1024px no tailwind.config.js
+- Spacer para compensar header fixo
+  - Altura de 64px (h-16) no conteúdo principal
+  - Aparece apenas em mobile (< 1024px) - lg:hidden
+  - Previne conteúdo de ficar escondido atrás do header fixo
+
+### Tokens
+
+**Semânticas**: N/A (ainda não aplicadas)
+
+**Primitivas** (utilizadas):
+- Cores:
+  - `bg-neutral-0` - Fundo branco do header e menu
+  - `bg-neutral-1100` - Fundo preto para item ativo e overlay
+  - `bg-opacity-50` - Opacidade de 50% para overlay (opacidade padrão do Tailwind)
+  - `text-neutral-0` - Texto branco em item ativo
+  - `text-neutral-1100` - Texto preto padrão
+  - `bg-brand-500` - Verde-limão para logo
+  - `bg-neutral-300` - Fundo cinza médio para avatar e bordas
+  - `border-neutral-300` - Borda cinza clara
+  - `text-red-500` - Vermelho para botão Sair
+- Espaçamentos:
+  - `px-4` (16px) - Padding horizontal do header e menu
+  - `py-4` (16px) - Padding vertical do header e menu
+  - `gap-3` (12px) - Espaçamento entre itens de navegação
+  - `gap-2` (8px) - Espaçamento entre ícone e texto no logo (fallback usando gap padrão do Tailwind)
+  - `h-16` (64px) - Altura do header e spacer
+  - `w-10 h-10` (40px) - Tamanho do avatar
+- Tipografia:
+  - `text-heading-xs` - Logo "Mycash+"
+  - `text-heading-sm` - Título "Menu"
+  - `text-label-lg` - Labels de navegação
+- Shapes:
+  - `rounded-full` - Avatar e botões circulares
+  - `rounded-[100px]` - Botões de navegação (pill shape)
+- Breakpoints:
+  - `lg:` (1024px) - Breakpoint para sidebar desktop vs header mobile
+  - `lg:hidden` - Esconde em desktop
+  - `hidden lg:block` - Mostra apenas em desktop
+
+**Conversões**: 
+- `gap-2` (8px) - Usado para espaçamento entre logo ícone e texto (não existe token específico, usando gap padrão do Tailwind)
+- `bg-opacity-50` - Opacidade de 50% para overlay (usando opacity padrão do Tailwind)
+
+### Build
+
+**Tentativas**: 1 | **Erros**: 0 | **Status**: ✅ Sucesso
+
+### Commit
+
+**Hash**: f5e3674  
+**Mensagem**: feat: sistema de layout e navegação mobile  
+**Status**: ✅ Commit realizado e push para GitHub concluído
+
+### Arquivos Criados
+
+- `src/components/layout/HeaderMobile.tsx` - Componente principal do header mobile
+- Arquivos modificados:
+  - `src/components/layout/AppLayout.tsx` - Integração do HeaderMobile
+  - `tailwind.config.js` - Configuração explícita de breakpoints (lg: 1024px)
+
+### Notas
+
+- HeaderMobile implementado seguindo design system
+- Menu dropdown com animação suave de slide-down (300ms)
+- Breakpoints configurados corretamente (1024px)
+- Sidebar e HeaderMobile nunca aparecem simultaneamente
+- Overlay escuro com transição suave
+- Todos os estilos usam exclusivamente variáveis do design system
+- Spacer adicionado para compensar header fixo e prevenir conteúdo escondido
+- Menu fecha corretamente ao clicar em item, X ou overlay
+- Navegação funcional entre todas as seções
