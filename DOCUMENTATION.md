@@ -488,6 +488,7 @@
   - Tablet (md): 2 colunas (grid-cols-2)
   - Mobile: 1 coluna vertical (grid-cols-1)
   - Espaçamento entre cards (gap-4 = 16px)
+  - Altura igual para todos os cards (h-full e flex flex-col)
 - Animações suaves de contagem nos valores
   - Quando valor muda devido a filtros ou novos dados, anima de zero até o valor final em 800ms
   - Mostra números intermediários rapidamente usando requestAnimationFrame
