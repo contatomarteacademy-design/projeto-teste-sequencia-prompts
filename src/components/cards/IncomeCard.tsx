@@ -1,0 +1,69 @@
+import { useEffect, useState } from 'react';
+import { useFinance } from '../../contexts/FinanceContext';
+import { FiArrowDownLeft } from 'react-icons/fi';
+
+export default function IncomeCard() {
+  const { calculateIncomeForPeriod } = useFinance();
+  const income = calculateIncomeForPeriod();
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    // Resetar animação quando valor muda
+    setDisplayValue(0);
+    const target = income;
+
+    // Animação de contagem (800ms)
+    const duration = 800;
+    const startTime = Date.now();
+    const startValue = 0;
+
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing ease-out
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = startValue + (target - startValue) * eased;
+
+      setDisplayValue(current);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setDisplayValue(target);
+      }
+    };
+
+    animate();
+  }, [income]);
+
+  // Formatar como moeda brasileira
+  const formatCurrency = (value: number): string => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
+  };
+
+  return (
+    <div className="bg-neutral-0 border border-neutral-300 rounded-[100px] p-6">
+      <div className="flex items-start justify-between mb-4">
+        {/* Label */}
+        <h3 className="text-label-md text-neutral-1100 font-semibold">
+          Receitas
+        </h3>
+
+        {/* Ícone em círculo cinza claro */}
+        <div className="w-10 h-10 bg-neutral-300 rounded-full flex items-center justify-center">
+          <FiArrowDownLeft size={20} className="text-neutral-1100" />
+        </div>
+      </div>
+
+      {/* Valor */}
+      <p className="text-heading-sm text-neutral-1100 font-bold">
+        {formatCurrency(displayValue)}
+      </p>
+    </div>
+  );
+}
+

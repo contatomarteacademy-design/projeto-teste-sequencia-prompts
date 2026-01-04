@@ -6,7 +6,7 @@
 - [x] PROMPT 2: Sistema de Layout e Navegação Desktop
 - [x] PROMPT 3: Sistema de Layout e Navegação Mobile
 - [x] PROMPT 4: Context Global e Gerenciamento de Estado
-- [ ] PROMPT 5: Cards de Resumo Financeiro
+- [x] PROMPT 5: Cards de Resumo Financeiro
 - [ ] PROMPT 6: Header do Dashboard com Controles
 - [ ] PROMPT 7: Carrossel de Gastos por Categoria
 - [ ] PROMPT 8: Gráfico de Fluxo Financeiro
@@ -289,7 +289,7 @@
   - `bg-neutral-1100` - Fundo preto para item ativo e overlay
   - `bg-opacity-50` - Opacidade de 50% para overlay (opacidade padrão do Tailwind)
   - `text-neutral-0` - Texto branco em item ativo
-  - `text-neutral-1100` - Texto preto padrão
+  - `text-neutral-1100` - Texto branco padrão
   - `bg-brand-500` - Verde-limão para logo
   - `bg-neutral-300` - Fundo cinza médio para avatar e bordas
   - `border-neutral-300` - Borda cinza clara
@@ -429,7 +429,7 @@
 
 ### Commit
 
-**Hash**: 8a2415c (implementação), 160e6a1 (fix tipos), 58c4a91 (integração App.tsx)  
+**Hash**: 8a2415c (implementação), 160e6a1 (fix tipos), 58c4a91 (integração App.tsx), 5e1464d (documentação)  
 **Mensagem**: feat: context global e gerenciamento de estado  
 **Status**: ✅ Commit realizado e push para GitHub concluído
 
@@ -452,3 +452,120 @@
 - Tratamento de divisão por zero em funções de cálculo
 - Dados mock distribuídos nos últimos 3 meses usando datas aleatórias
 - Uso de uuid para geração de IDs únicos
+
+---
+
+## PROMPT 5: Cards de Resumo Financeiro
+
+**Status**: ✅ | **Data**: 04/01/2025 | **Build**: ✅ (1 tentativa)
+
+### Implementado
+
+- Componente BalanceCard (Card de Saldo Total)
+  - Fundo completamente preto (bg-neutral-1100)
+  - Texto branco (text-neutral-0)
+  - Elemento decorativo de fundo: círculo grande desfocado (blur-3xl) na cor verde-limão (bg-brand-500) com opacidade baixa (opacity-20)
+  - Círculo parcialmente cortado pelas bordas do card (posicionado absolutamente)
+  - Label "Saldo Total" no topo em cinza claro (text-neutral-500)
+  - Valor do saldo formatado como moeda brasileira (Intl.NumberFormat pt-BR)
+  - Badge arredondado (rounded-full) com fundo semi-transparente branco (bg-neutral-0 bg-opacity-20) e backdrop-blur
+  - Ícone de gráfico crescente (FiTrendingUp) e texto mostrando crescimento percentual
+  - Valor vem de calculateTotalBalance do contexto global
+  - Atualiza automaticamente quando filtros mudarem
+- Componente IncomeCard (Card de Receitas)
+  - Fundo branco (bg-neutral-0) com borda sutil (border-neutral-300)
+  - Label "Receitas" no topo à esquerda em preto negrito (text-label-md text-neutral-1100)
+  - Círculo no topo à direita com fundo cinza claro (bg-neutral-300) contendo ícone de seta diagonal (FiArrowDownLeft)
+  - Valor total das receitas formatado como moeda brasileira
+  - Valor vem de calculateIncomeForPeriod e respeita filtros ativos
+- Componente ExpenseCard (Card de Despesas)
+  - Estrutura similar ao de receitas
+  - Label "Despesas" em cinza médio (text-neutral-500)
+  - Ícone em círculo com fundo vermelho muito claro (bg-red-400 bg-opacity-20) mostrando seta diagonal (FiArrowUpRight) em vermelho (text-red-500)
+  - Valor vem de calculateExpensesForPeriod e respeita filtros
+- Layout responsivo dos três cards
+  - Desktop (lg): 3 colunas lado a lado (grid-cols-3)
+  - Tablet (md): 2 colunas (grid-cols-2)
+  - Mobile: 1 coluna vertical (grid-cols-1)
+  - Espaçamento entre cards (gap-4 = 16px)
+- Animações suaves de contagem nos valores
+  - Quando valor muda devido a filtros ou novos dados, anima de zero até o valor final em 800ms
+  - Mostra números intermediários rapidamente usando requestAnimationFrame
+  - Easing ease-out para desaceleração natural no final (1 - (1 - progress)³)
+  - Implementado com useEffect e requestAnimationFrame
+- Componente SummaryCards
+  - Wrapper que organiza os três cards em grid responsivo
+  - Integrado no Dashboard
+- Integração no Dashboard
+  - Cards exibidos no topo da página
+  - Utilizam hook useFinance para acessar dados do contexto
+  - Valores atualizam automaticamente quando filtros mudam
+
+### Tokens
+
+**Semânticas**: N/A (ainda não aplicadas)
+
+**Primitivas** (utilizadas):
+- Cores:
+  - `bg-neutral-1100` - Fundo preto do card de saldo
+  - `bg-neutral-0` - Fundo branco dos cards de receita/despesa
+  - `text-neutral-0` - Texto branco no card de saldo
+  - `text-neutral-1100` - Texto preto padrão
+  - `text-neutral-500` - Texto cinza médio (labels)
+  - `bg-brand-500` - Verde-limão para círculo decorativo
+  - `bg-neutral-300` - Fundo cinza claro para ícone
+  - `border-neutral-300` - Borda cinza clara
+  - `bg-red-400` - Vermelho claro para fundo do ícone de despesa
+  - `text-red-500` - Vermelho para ícone de despesa
+- Espaçamentos:
+  - `p-6` (24px) - Padding interno dos cards
+  - `gap-4` (16px) - Espaçamento entre cards
+  - `mb-4`, `mb-2` - Margens verticais
+  - `gap-2` (8px) - Espaçamento no badge
+- Tipografia:
+  - `text-paragraph-sm` - Label "Saldo Total"
+  - `text-heading-md` - Valor do saldo total
+  - `text-heading-sm` - Valores de receita/despesa
+  - `text-label-md` - Labels de receita/despesa
+- Shapes:
+  - `rounded-[100px]` - Bordas arredondadas dos cards (pill shape)
+  - `rounded-full` - Círculos (ícones, badge)
+- Efeitos:
+  - `blur-3xl` - Blur intenso para círculo decorativo
+  - `bg-opacity-20` - Opacidade de 20% para círculo e badge
+  - `backdrop-blur-sm` - Backdrop blur para badge
+
+**Conversões**: 
+- `bg-opacity-20` - Opacidade de 20% (usando opacity padrão do Tailwind)
+- `backdrop-blur-sm` - Backdrop blur (usando blur padrão do Tailwind)
+
+### Build
+
+**Tentativas**: 1 | **Erros**: 0 | **Status**: ✅ Sucesso
+
+### Commit
+
+**Hash**: (será gerado após commit)  
+**Mensagem**: feat: cards de resumo financeiro  
+**Status**: ⏳ Commit será realizado após documentação
+
+### Arquivos Criados
+
+- `src/components/cards/BalanceCard.tsx` - Card de saldo total
+- `src/components/cards/IncomeCard.tsx` - Card de receitas
+- `src/components/cards/ExpenseCard.tsx` - Card de despesas
+- `src/components/dashboard/SummaryCards.tsx` - Wrapper dos cards
+- Arquivos modificados:
+  - `src/pages/Dashboard.tsx` - Integração dos cards
+
+### Notas
+
+- Cards implementados seguindo design do Figma
+- Animações de contagem suaves usando requestAnimationFrame
+- Valores formatados como moeda brasileira (R$ X.XXX,XX)
+- Layout responsivo: 3 colunas desktop, 2 tablet, 1 mobile
+- Cards atualizam automaticamente quando filtros mudam
+- Todos os estilos usam exclusivamente variáveis do design system
+- Círculo decorativo verde-limão com blur intenso no card de saldo
+- Badge de crescimento com backdrop blur no card de saldo
+- Ícones diferenciados para receitas (seta baixo-esquerda) e despesas (seta cima-direita)
