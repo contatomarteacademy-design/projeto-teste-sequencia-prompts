@@ -285,37 +285,45 @@ export default function DateRangeCalendar({
 
         {/* Dias do Mês */}
         <div className="grid grid-cols-7 gap-1">
-          {days.map((date, index) => {
+          {allDays.map((date, index) => {
             if (!date) {
               return <div key={`empty-${index}`} className="aspect-square" />;
             }
 
-            const isInRange = isDateInRange(date);
+            // Verificar se é do mês atual
+            const isCurrentMonth = date.getMonth() === month && date.getFullYear() === year;
+            
+            const isInRange = isDateInRange(date) && isCurrentMonth;
             const selectionType = isDateSelected(date);
             const isToday =
-              date.toDateString() === new Date().toDateString();
+              date.toDateString() === new Date().toDateString() && isCurrentMonth;
 
+            const isStart = selectionType === 'start';
+            const isEnd = selectionType === 'end';
+            
             return (
               <button
                 key={date.toISOString()}
-                onClick={() => handleDateClick(date)}
+                onClick={() => {
+                  if (isCurrentMonth) {
+                    handleDateClick(date);
+                  }
+                }}
+                disabled={!isCurrentMonth}
                 className={`
                   aspect-square
-                  rounded-lg
                   text-paragraph-sm
                   font-semibold
                   transition-all
-                  hover:bg-neutral-200
+                  ${!isCurrentMonth ? 'text-neutral-400 cursor-not-allowed' : 'text-neutral-1100 hover:bg-neutral-200'}
                   ${
-                    selectionType === 'start'
-                      ? 'bg-neutral-1100 text-neutral-0 rounded-l-full'
-                      : selectionType === 'end'
-                      ? 'bg-neutral-1100 text-neutral-0 rounded-r-full'
+                    isStart || isEnd
+                      ? 'bg-neutral-1100 text-neutral-0 rounded-full'
                       : isInRange
                       ? 'bg-neutral-200 text-neutral-1100'
-                      : 'text-neutral-1100'
+                      : ''
                   }
-                  ${isToday ? 'ring-2 ring-brand-500' : ''}
+                  ${isToday && !isStart && !isEnd ? 'ring-2 ring-brand-500' : ''}
                 `}
               >
                 {date.getDate()}
