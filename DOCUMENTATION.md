@@ -839,3 +839,136 @@
 - Formatação de moeda brasileira (R$ X.XXX,XX)
 - Porcentagem formatada com 1 casa decimal e arredondada no display
 - Integração completa com filtros globais (período, membro, tipo, busca)
+
+---
+
+## PROMPT 8: Gráfico de Fluxo Financeiro
+
+**Status**: ✅ | **Data**: 04/01/2025 | **Build**: ✅ (2 tentativas)
+
+### Implementado
+
+- Componente `FinancialFlowChart` para exibir gráfico de fluxo financeiro interativo
+  - Implementado com biblioteca Recharts para gráficos responsivos e interativos
+  - Gráfico de área com duas séries: Receitas e Despesas
+  - **Área de Receitas:**
+    - Linha de borda verde-limão (#dffe35) com 3px de espessura
+    - Gradiente vertical: topo verde-limão 30% opaco, base transparente
+    - Curvas suaves (type="monotone")
+  - **Área de Despesas:**
+    - Linha de borda preta (#080b12) com 3px de espessura
+    - Gradiente vertical: topo preto 10% opaco, base transparente
+    - Curvas suaves (type="monotone")
+  - **Eixo X (horizontal):**
+    - Mostra nomes dos meses abreviados (Jan, Fev, Mar, Abr, Mai, Jun, Jul)
+    - Fonte pequena (12px) e cor cinza média (#9ca3af)
+    - Sem linhas de eixo (axisLine={false})
+  - **Eixo Y (vertical):**
+    - Valores monetários formatados de forma compacta (R$ 2k, R$ 4k, R$ 6k, etc)
+    - Fonte pequena (12px) e cor cinza média (#9ca3af)
+    - Sem linhas de eixo (axisLine={false})
+    - Escala automática baseada nos valores máximos
+  - **Grid horizontal tracejado:**
+    - Linhas horizontais tracejadas muito sutis (strokeDasharray="3 3")
+    - Cor cinza claríssimo (#e5e7eb)
+    - Facilita leitura sem poluir visualmente
+  - **Tooltip interativo:**
+    - Linha vertical fina cinza clara (#d1d5db) acompanha o cursor
+    - Tooltip flutuante com fundo branco, sombra elevada e bordas arredondadas
+    - Exibe três linhas:
+      - Nome do mês em negrito (text-label-md)
+      - "Receitas: R$ X.XXX,XX" em verde-limão (#dffe35)
+      - "Despesas: R$ X.XXX,XX" em preto (#080b12)
+    - Valores formatados com moeda completa brasileira
+  - **Título e Legenda:**
+    - Título "Fluxo financeiro" com ícone de gráfico (FiBarChart2) à esquerda
+    - Legenda horizontal à direita:
+      - Círculo pequeno verde-limão com texto "Receitas"
+      - Círculo pequeno preto com texto "Despesas"
+  - **Dimensões:**
+    - Altura fixa de 300px
+    - Largura responsiva ocupando 100% do card
+    - Fundo cinza claro muito suave (via Recharts)
+  - **Dados mock fixos:**
+    - 7 meses de dados mock (Jan a Jul)
+    - Estruturado para fácil substituição por dados reais no futuro
+- Integração no Dashboard
+  - Gráfico adicionado abaixo do carrossel de categorias
+  - Espaçamento superior (mt-8) para separação visual
+  - Layout totalmente responsivo
+
+### Tokens
+
+**Semânticas**: N/A (ainda não aplicadas)
+
+**Primitivas** (utilizadas):
+- Cores:
+  - `bg-neutral-0` - Fundo branco do card
+  - `text-neutral-1100` - Texto preto (título, legenda, eixos)
+  - `bg-neutral-1100` - Indicador preto da legenda de Receitas
+  - `bg-brand-500` - Indicador verde-limão da legenda de Despesas
+  - Gradientes SVG:
+    - Receitas: #080b12 (opacity 0.8) → #e5e7eb (opacity 0.3)
+    - Despesas: #e5e7eb (opacity 0.5) → #e5e7eb (opacity 0.1)
+- Espaçamentos:
+  - `px-8 py-[39px]` (32px horizontal, 39px vertical) - Padding do card
+  - `gap-[14px]` - Espaçamento entre ícone e título
+  - `gap-[27px]` - Espaçamento entre itens da legenda
+  - `gap-2` - Espaçamento entre indicador e texto na legenda
+  - `gap-4` - Espaçamento entre eixo Y e gráfico
+  - `gap-[30px]` - Espaçamento vertical no container do gráfico
+  - `gap-[26px]` - Espaçamento entre meses no eixo X
+  - `gap-12` - Espaçamento entre valores no eixo Y
+  - `mb-8` (32px) - Margem inferior do header
+  - `mt-8` (32px) - Margem superior do gráfico no Dashboard
+- Tipografia:
+  - `text-heading-xs` - Título "Fluxo financeiro"
+  - `text-label-sm` - Texto da legenda
+  - `text-paragraph-sm` - Texto dos eixos Y e X
+- Shapes:
+  - `rounded-xl` (20px) - Bordas arredondadas do card
+  - `rounded-full` - Indicadores circulares da legenda
+- Efeitos:
+  - `transition-all duration-300` - Transições suaves nas áreas e linhas do gráfico
+  - Gradientes SVG para áreas preenchidas
+  - Curvas de Bézier cúbicas para linhas suaves
+
+**Conversões**: 
+- `w-[80px]` - Largura do eixo Y (não existe token específico, usando valor arbitrário do Tailwind baseado no design do Figma)
+- `py-[39px]` - Padding vertical específico do design (não existe token específico, usando valor arbitrário do Tailwind)
+- `gap-[14px]`, `gap-[27px]`, `gap-[30px]`, `gap-[26px]` - Gaps específicos do design (usando valores arbitrários do Tailwind)
+- Dimensões do SVG: 624px x 360px (conforme design do Figma, não existe token específico)
+- Valores do eixo Y: [12500, 10000, 7500, 5000, 2500, 0] (valores fixos do design)
+
+### Build
+
+**Tentativas**: 1 | **Erros**: 0 | **Status**: ✅ Sucesso
+
+### Commit
+
+**Hash**: e39927b (implementação inicial), (consulte git log para hash mais recente)  
+**Mensagem**: feat: gráfico de fluxo financeiro | refactor: gráfico interativo com Recharts  
+**Status**: ⏳ Aguardando commit automático
+
+### Arquivos Criados
+
+- `src/components/dashboard/FinancialFlowChart.tsx` - Componente do gráfico de fluxo financeiro
+- Arquivos modificados:
+  - `src/pages/Dashboard.tsx` - Integração do FinancialFlowChart
+- Dependências adicionadas:
+  - `recharts` - Biblioteca de gráficos React para interatividade
+
+### Notas
+
+- Gráfico implementado com biblioteca Recharts para interatividade e responsividade
+- Tooltip interativo com linha vertical que segue o cursor
+- Grid horizontal tracejado sutil para facilitar leitura
+- Gradientes SVG para áreas preenchidas (receitas verde-limão 30% opaco, despesas preto 10% opaco)
+- Escala automática baseada nos valores máximos dos dados
+- Eixo Y com formatação compacta (R$ 2k, R$ 4k, etc)
+- Eixo X com meses abreviados em português
+- Dados mock fixos para 7 meses (estruturado para fácil substituição por dados reais)
+- Tooltip customizado com formatação brasileira de moeda
+- Layout totalmente responsivo usando ResponsiveContainer do Recharts
+- Todos os estilos usam exclusivamente variáveis do design system
+- Biblioteca Recharts adicionada como dependência (aumenta bundle size, mas oferece interatividade)
