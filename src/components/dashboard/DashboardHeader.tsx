@@ -8,7 +8,6 @@ export default function DashboardHeader() {
   const {
     familyMembers,
     selectedMember,
-    dateRange,
     searchText,
     setSelectedMember,
     setDateRange,
