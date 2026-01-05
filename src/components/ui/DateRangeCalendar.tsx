@@ -16,47 +16,64 @@ export default function DateRangeCalendar({
   onClose,
   isMobile = false,
 }: DateRangeCalendarProps) {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState(() => {
+    // Inicializar com o mês da data inicial ou mês atual
+    if (startDate) {
+      return new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+    }
+    return new Date();
+  });
   const [currentMonth2, setCurrentMonth2] = useState(() => {
-    const next = new Date();
+    // Segundo calendário sempre um mês à frente do primeiro
+    const first = startDate 
+      ? new Date(startDate.getFullYear(), startDate.getMonth(), 1)
+      : new Date();
+    const next = new Date(first);
     next.setMonth(next.getMonth() + 1);
     return next;
   });
   const [selectingStart, setSelectingStart] = useState(true);
   const [tempStartDate, setTempStartDate] = useState<Date | null>(startDate);
   const [tempEndDate, setTempEndDate] = useState<Date | null>(endDate);
+  
+  // Atualizar meses quando startDate/endDate mudarem externamente
+  useEffect(() => {
+    if (startDate) {
+      const newMonth = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+      setCurrentMonth(newMonth);
+      const nextMonth = new Date(newMonth);
+      nextMonth.setMonth(nextMonth.getMonth() + 1);
+      setCurrentMonth2(nextMonth);
+    }
+    setTempStartDate(startDate);
+    setTempEndDate(endDate);
+  }, [startDate, endDate]);
 
   const monthNames = [
-    'Janeiro',
-    'Fevereiro',
-    'Março',
-    'Abril',
-    'Maio',
-    'Junho',
-    'Julho',
-    'Agosto',
-    'Setembro',
-    'Outubro',
-    'Novembro',
-    'Dezembro',
+    'janeiro',
+    'fevereiro',
+    'março',
+    'abril',
+    'maio',
+    'junho',
+    'julho',
+    'agosto',
+    'setembro',
+    'outubro',
+    'novembro',
+    'dezembro',
   ];
 
-  const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  const weekDays = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay();
 
-    const days = [];
-    // Dias vazios no início
-    for (let i = 0; i < startingDayOfWeek; i++) {
-      days.push(null);
-    }
     // Dias do mês
+    const days = [];
     for (let i = 1; i <= daysInMonth; i++) {
       days.push(new Date(year, month, i));
     }
@@ -67,6 +84,7 @@ export default function DateRangeCalendar({
   const isDateInRange = (date: Date) => {
     if (!tempStartDate && !tempEndDate) return false;
     if (tempStartDate && tempEndDate) {
+      // Incluir data inicial e final no range
       return date >= tempStartDate && date <= tempEndDate;
     }
     if (tempStartDate) {
@@ -193,27 +211,64 @@ export default function DateRangeCalendar({
     const month = monthDate.getMonth();
     const year = monthDate.getFullYear();
 
+    // Adicionar dias do mês anterior no início se necessário
+    const firstDayOfMonth = new Date(year, month, 1);
+    const startingDayOfWeek = firstDayOfMonth.getDay();
+    const prevMonthDays: (Date | null)[] = [];
+    
+    if (startingDayOfWeek > 0) {
+      const prevMonth = month === 0 ? 11 : month - 1;
+      const prevYear = month === 0 ? year - 1 : year;
+      const daysInPrevMonth = new Date(prevYear, prevMonth + 1, 0).getDate();
+      
+      for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+        prevMonthDays.push(new Date(prevYear, prevMonth, daysInPrevMonth - i));
+      }
+    }
+
+    // Adicionar dias do próximo mês no final se necessário
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+    const endingDayOfWeek = lastDayOfMonth.getDay();
+    const nextMonthDays: (Date | null)[] = [];
+    
+    if (endingDayOfWeek < 6) {
+      const nextMonth = month === 11 ? 0 : month + 1;
+      const nextYear = month === 11 ? year + 1 : year;
+      
+      for (let i = 1; i <= 6 - endingDayOfWeek; i++) {
+        nextMonthDays.push(new Date(nextYear, nextMonth, i));
+      }
+    }
+
+    const allDays = [...prevMonthDays, ...days, ...nextMonthDays];
+
     return (
       <div className="flex flex-col">
         {/* Header do Calendário */}
         <div className="flex items-center justify-between mb-4">
-          <button
-            onClick={() => navigateMonth('prev', calendarIndex)}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-200 transition-colors"
-            aria-label="Mês anterior"
-          >
-            <FiChevronLeft size={20} className="text-neutral-1100" />
-          </button>
+          {calendarIndex === 1 && (
+            <button
+              onClick={() => navigateMonth('prev', calendarIndex)}
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-200 transition-colors"
+              aria-label="Mês anterior"
+            >
+              <FiChevronLeft size={20} className="text-neutral-500" />
+            </button>
+          )}
+          {calendarIndex === 2 && <div className="w-8" />}
           <h3 className="text-label-md text-neutral-1100 font-semibold">
             {monthNames[month]} {year}
           </h3>
-          <button
-            onClick={() => navigateMonth('next', calendarIndex)}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-200 transition-colors"
-            aria-label="Próximo mês"
-          >
-            <FiChevronRight size={20} className="text-neutral-1100" />
-          </button>
+          {calendarIndex === 2 && (
+            <button
+              onClick={() => navigateMonth('next', calendarIndex)}
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-200 transition-colors"
+              aria-label="Próximo mês"
+            >
+              <FiChevronRight size={20} className="text-neutral-500" />
+            </button>
+          )}
+          {calendarIndex === 1 && <div className="w-8" />}
         </div>
 
         {/* Dias da Semana */}
@@ -303,7 +358,7 @@ export default function DateRangeCalendar({
       </div>
 
       {/* Calendários */}
-      <div className={isMobileState ? 'flex flex-col' : 'flex gap-8'}>
+      <div className={isMobileState ? 'flex flex-col gap-6' : 'flex gap-8'}>
         {renderCalendar(currentMonth, 1)}
         {!isMobileState && renderCalendar(currentMonth2, 2)}
       </div>
