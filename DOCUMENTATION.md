@@ -12,7 +12,7 @@
 - [x] PROMPT 8: Gráfico de Fluxo Financeiro
 - [x] PROMPT 9: Widget de Cartões de Crédito
 - [x] PROMPT 10: Widget de Calendário e Agenda
-- [ ] PROMPT 11: Seção de Objetivos Financeiros
+- [x] PROMPT 11: Seção de Objetivos Financeiros
 - [ ] PROMPT 12: Tabela de Transações Detalhada
 - [ ] PROMPT 13: Modal de Nova Transação
 - [ ] PROMPT 14: Modal de Adicionar Membro
