@@ -16,6 +16,7 @@ interface DateRange {
 interface ExpenseByCategory {
   category: string;
   amount: number;
+  percentage: number;
 }
 
 interface FinanceContextType {
@@ -247,8 +248,14 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
       categoryMap.set(expense.category, current + expense.amount);
     });
 
+    const totalExpenses = expenses.reduce((sum, t) => sum + t.amount, 0);
+
     const result: ExpenseByCategory[] = Array.from(categoryMap.entries()).map(
-      ([category, amount]) => ({ category, amount })
+      ([category, amount]) => ({
+        category,
+        amount,
+        percentage: totalExpenses === 0 ? 0 : Number(((amount / totalExpenses) * 100).toFixed(1)),
+      })
     );
 
     return result.sort((a, b) => b.amount - a.amount);

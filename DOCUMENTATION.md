@@ -8,7 +8,7 @@
 - [x] PROMPT 4: Context Global e Gerenciamento de Estado
 - [x] PROMPT 5: Cards de Resumo Financeiro
 - [x] PROMPT 6: Header do Dashboard com Controles
-- [ ] PROMPT 7: Carrossel de Gastos por Categoria
+- [x] PROMPT 7: Carrossel de Gastos por Categoria
 - [ ] PROMPT 8: Gráfico de Fluxo Financeiro
 - [ ] PROMPT 9: Widget de Cartões de Crédito
 - [ ] PROMPT 10: Widget de Calendário e Agenda
@@ -722,3 +722,120 @@
 - Formato de data brasileiro: "01 Jan - 31 Jan 2026"
 - Avatar selecionado destacado com ring verde-limão
 - Focus states para acessibilidade (focus ring verde-limão)
+
+---
+
+## PROMPT 7: Carrossel de Gastos por Categoria
+
+**Status**: ✅ | **Data**: 04/01/2025 | **Build**: ✅ (1 tentativa)
+
+### Implementado
+
+- Componente `CategoryExpenseCard` para exibir card individual de categoria
+  - Gráfico donut SVG com porcentagem no centro
+  - Nome da categoria em texto médio
+  - Valor formatado como moeda brasileira (R$ X.XXX,XX)
+  - Estado selecionado com borda verde-limão (ring-2 ring-brand-500)
+  - Hover com sombra elevada
+  - Cores dinâmicas para o gráfico donut baseadas na categoria
+  - Animação suave do gráfico donut (transition de stroke-dashoffset)
+  - Tamanho do gráfico: 71px x 71px (conforme design do Figma)
+  - Padding: px-8 py-6 (32px horizontal, 24px vertical)
+  - Gap interno: 12px entre elementos
+  - Gap de 5px entre nome da categoria e valor
+  - Borda sutil (border border-neutral-300)
+  - Border-radius: rounded-xl (20px)
+- Componente `CategoryExpensesCarousel` para gerenciar o carrossel horizontal
+  - Scroll horizontal suave com overflow-x-auto
+  - Botões de navegação (setas esquerda/direita) que aparecem quando há scroll
+  - Botões circulares brancos com sombra e hover
+  - Verificação automática de scrollability (pode rolar esquerda/direita)
+  - Gap de 16px (gap-4) entre os cards
+  - Scrollbar oculta (scrollbar-hide)
+  - Estado de categoria selecionada (toggle ao clicar)
+  - Integração com `calculateExpensesByCategory` do contexto global
+  - Ordenação automática por valor (maior para menor)
+  - Mensagem vazia quando não há despesas no período
+- Atualização do `FinanceContext` para incluir porcentagem
+  - Interface `ExpenseByCategory` atualizada com propriedade `percentage`
+  - Função `calculateExpensesByCategory` calcula porcentagem de cada categoria em relação ao total de despesas
+  - Porcentagem formatada com 1 casa decimal
+  - Cálculo: (amount / totalExpenses) * 100
+- Integração no Dashboard
+  - Carrossel adicionado abaixo dos cards de resumo
+  - Espaçamento superior (mt-8) para separação visual
+  - Layout responsivo: scroll horizontal funciona em todos os tamanhos de tela
+
+### Tokens
+
+**Semânticas**: N/A (ainda não aplicadas)
+
+**Primitivas** (utilizadas):
+- Cores:
+  - `bg-neutral-0` - Fundo branco dos cards
+  - `bg-neutral-200` - Fundo cinza claro para hover nos botões de navegação
+  - `border-neutral-300` - Borda sutil dos cards
+  - `text-neutral-1100` - Texto preto (nome da categoria e valor)
+  - `text-neutral-200` - Cor do ring de fundo do gráfico donut
+  - `text-brand-500` - Verde-limão para gráfico donut e ring de seleção
+  - `text-neutral-500` - Cinza médio para gráficos donut alternativos
+- Espaçamentos:
+  - `px-8 py-6` (32px horizontal, 24px vertical) - Padding dos cards
+  - `gap-4` (16px) - Espaçamento entre cards no carrossel
+  - `gap-[5px]` - Espaçamento entre nome da categoria e valor
+  - `gap-[12px]` - Espaçamento interno do card (via style inline)
+  - `pb-4` (16px) - Padding inferior do carrossel para acomodar scrollbar
+  - `mt-8` (32px) - Margem superior do carrossel no Dashboard
+- Tipografia:
+  - `text-paragraph-xs` - Porcentagem no centro do gráfico donut
+  - `text-paragraph-md` - Nome da categoria
+  - `text-heading-xs` - Valor monetário (negrito)
+- Shapes:
+  - `rounded-xl` (20px) - Bordas arredondadas dos cards
+  - `rounded-full` - Bordas arredondadas dos botões de navegação
+- Efeitos:
+  - `hover:shadow-md` - Sombra elevada no hover dos cards
+  - `ring-2 ring-brand-500` - Ring verde-limão quando card está selecionado
+  - `focus:ring-2 focus:ring-brand-500` - Focus ring verde-limão
+  - `transition-all` - Transições suaves nos cards
+  - `transition-colors` - Transições de cor nos botões de navegação
+  - `transition: stroke-dashoffset 0.5s ease-in-out` - Animação do gráfico donut
+
+**Conversões**: 
+- `w-[71px] h-[71px]` - Tamanho do gráfico donut (conforme design do Figma, não existe token específico)
+- `min-w-[180px]` - Largura mínima dos cards (não existe token específico, usando valor arbitrário do Tailwind)
+- `gap-[5px]` e `gap-[12px]` - Gaps específicos do design (usando valores inline via style, não existe token específico)
+- `w-10 h-10` (40px) - Tamanho dos botões de navegação (usando token padrão do Tailwind)
+
+### Build
+
+**Tentativas**: 1 | **Erros**: 0 | **Status**: ✅ Sucesso
+
+### Commit
+
+**Hash**: (consulte git log para hash mais recente)  
+**Mensagem**: feat: carrossel de gastos por categoria  
+**Status**: ⏳ Aguardando commit automático
+
+### Arquivos Criados
+
+- `src/components/dashboard/CategoryExpenseCard.tsx` - Card individual de categoria
+- `src/components/dashboard/CategoryExpensesCarousel.tsx` - Carrossel horizontal de categorias
+- Arquivos modificados:
+  - `src/contexts/FinanceContext.tsx` - Adicionada propriedade `percentage` à interface `ExpenseByCategory` e atualizada função `calculateExpensesByCategory`
+  - `src/pages/Dashboard.tsx` - Integração do CategoryExpensesCarousel
+
+### Notas
+
+- Gráfico donut implementado com SVG puro (sem bibliotecas externas)
+- Animação suave do gráfico donut usando CSS transition
+- Cores dinâmicas para cada categoria (mapeamento manual no carrossel)
+- Porcentagem calculada em relação ao total de despesas do período filtrado
+- Cards ordenados automaticamente por valor (maior para menor)
+- Scroll horizontal funciona perfeitamente em todos os tamanhos de tela
+- Botões de navegação aparecem/desaparecem dinamicamente baseado na capacidade de scroll
+- Estado de seleção toggle (clique novamente para desselecionar)
+- Todos os estilos usam exclusivamente variáveis do design system
+- Formatação de moeda brasileira (R$ X.XXX,XX)
+- Porcentagem formatada com 1 casa decimal e arredondada no display
+- Integração completa com filtros globais (período, membro, tipo, busca)
