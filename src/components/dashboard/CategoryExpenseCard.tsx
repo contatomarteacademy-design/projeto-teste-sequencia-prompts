@@ -37,7 +37,8 @@ export default function CategoryExpenseCard({
         px-8 py-6
         min-w-[180px]
         transition-all
-        hover:shadow-md
+        hover:shadow-sm
+        hover:border-neutral-400
         focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2
         ${isSelected ? 'ring-2 ring-brand-500' : ''}
       `}

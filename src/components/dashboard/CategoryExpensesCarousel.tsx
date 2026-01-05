@@ -77,11 +77,31 @@ export default function CategoryExpensesCarousel() {
 
   return (
     <div className="relative w-full min-w-0 overflow-hidden">
+      {/* Máscara de gradiente esquerda - aparece quando pode rolar para a esquerda */}
+      {canScrollLeft && (
+        <div
+          className="absolute left-0 top-0 bottom-0 w-16 z-20 pointer-events-none"
+          style={{
+            background: 'linear-gradient(to right, rgba(243, 244, 246, 1), rgba(243, 244, 246, 0))',
+          }}
+        />
+      )}
+
+      {/* Máscara de gradiente direita - aparece quando pode rolar para a direita */}
+      {canScrollRight && (
+        <div
+          className="absolute right-0 top-0 bottom-0 w-16 z-20 pointer-events-none"
+          style={{
+            background: 'linear-gradient(to left, rgba(243, 244, 246, 1), rgba(243, 244, 246, 0))',
+          }}
+        />
+      )}
+
       {/* Seta Esquerda */}
       {canScrollLeft && (
         <button
           onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-10 h-10 bg-neutral-0 rounded-full shadow-md flex items-center justify-center hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-30 w-10 h-10 bg-neutral-0 rounded-full shadow-md flex items-center justify-center hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
           aria-label="Rolar para esquerda"
         >
           <FiChevronLeft size={24} className="text-neutral-500" />
@@ -95,6 +115,7 @@ export default function CategoryExpensesCarousel() {
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
+          paddingRight: '16px', // Padding após o último card
         }}
       >
         {sortedCategories.map(({ category, amount, percentage }) => (
@@ -118,7 +139,7 @@ export default function CategoryExpensesCarousel() {
       {canScrollRight && (
         <button
           onClick={() => scroll('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-10 h-10 bg-neutral-0 rounded-full shadow-md flex items-center justify-center hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-30 w-10 h-10 bg-neutral-0 rounded-full shadow-md flex items-center justify-center hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
           aria-label="Rolar para direita"
         >
           <FiChevronRight size={24} className="text-neutral-500" />
