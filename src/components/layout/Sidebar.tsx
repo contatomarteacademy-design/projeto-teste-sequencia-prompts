@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useSidebar } from '../../contexts/SidebarContext';
 import {
   HomeIcon,
   GolfIcon,
@@ -48,13 +48,9 @@ const Tooltip = ({ children, label, isVisible }: TooltipProps) => {
 };
 
 export default function Sidebar() {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const { isExpanded, toggleSidebar } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
-
-  const toggleSidebar = () => {
-    setIsExpanded(!isExpanded);
-  };
 
   const isActive = (path: string) => {
     if (path === '/') {
@@ -68,7 +64,7 @@ export default function Sidebar() {
       className={`
         relative
         bg-neutral-0
-        h-screen
+        h-full
         flex
         flex-col
         transition-all

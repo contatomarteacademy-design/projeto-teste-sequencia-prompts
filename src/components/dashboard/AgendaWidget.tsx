@@ -136,7 +136,7 @@ export default function AgendaWidget() {
           </div>
 
           {/* Semanas do mês */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-6">
             {Array.from({ length: Math.ceil((startingDayOfWeek + daysInMonth) / 7) }).map(
               (_, weekIndex) => {
                 const weekDays = [];
