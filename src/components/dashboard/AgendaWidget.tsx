@@ -124,7 +124,7 @@ export default function AgendaWidget() {
         {/* Grid do Calendário */}
         <div className="px-3 py-0">
           {/* Dias da semana */}
-          <div className="grid grid-cols-7 gap-0 h-12">
+          <div className="grid grid-cols-7 h-12">
             {weekDays.map((day, index) => (
               <div
                 key={index}
@@ -156,7 +156,7 @@ export default function AgendaWidget() {
                   weekDays.push(
                     <div
                       key={dayNumber}
-                      className="flex items-center justify-center h-12 relative p-1"
+                      className="flex items-center justify-center h-12 relative"
                     >
                       {isCurrentDay ? (
                         <div className="w-10 h-10 bg-brand-500 rounded-full flex items-center justify-center">
@@ -182,7 +182,7 @@ export default function AgendaWidget() {
                 }
               }
               return (
-                <div key={weekIndex} className="grid grid-cols-7 gap-0 h-12">
+                <div key={weekIndex} className="grid grid-cols-7 h-12">
                   {weekDays}
                 </div>
               );
