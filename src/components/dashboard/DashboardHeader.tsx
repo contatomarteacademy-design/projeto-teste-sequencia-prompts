@@ -24,32 +24,13 @@ export default function DashboardHeader() {
   const [isFilterPopoverOpen, setIsFilterPopoverOpen] = useState(false);
   const [hoveredMemberId, setHoveredMemberId] = useState<string | null>(null);
 
-  // Calcular datas do período atual
+  // Calcular datas do período atual (usado apenas na inicialização)
   const getCurrentMonthRange = () => {
     const now = new Date();
     const start = new Date(now.getFullYear(), now.getMonth(), 1);
     const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
     return { start, end };
   };
-
-  // Calcular datas do mês anterior
-  const getLastMonthRange = () => {
-    const now = new Date();
-    const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const end = new Date(now.getFullYear(), now.getMonth(), 0);
-    return { start, end };
-  };
-
-  // Calcular datas dos últimos 3 meses
-  const getLast3MonthsRange = () => {
-    const now = new Date();
-    const start = new Date(now.getFullYear(), now.getMonth() - 3, 1);
-    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    return { start, end };
-  };
-
-  // Função mantida para compatibilidade, mas agora o calendário gerencia as datas diretamente
-  // Função removida - agora o calendário gerencia as datas diretamente
 
   const handleMemberChange = (memberId: string | null) => {
     setSelectedMember(memberId);
