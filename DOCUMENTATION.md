@@ -11,7 +11,7 @@
 - [x] PROMPT 7: Carrossel de Gastos por Categoria
 - [x] PROMPT 8: Gráfico de Fluxo Financeiro
 - [x] PROMPT 9: Widget de Cartões de Crédito
-- [ ] PROMPT 10: Widget de Calendário e Agenda
+- [x] PROMPT 10: Widget de Calendário e Agenda
 - [ ] PROMPT 11: Seção de Objetivos Financeiros
 - [ ] PROMPT 12: Tabela de Transações Detalhada
 - [ ] PROMPT 13: Modal de Nova Transação
@@ -1088,3 +1088,171 @@
 - Botões de ação preparados para modais/páginas futuras (PROMPT 15 e 19)
 - Todos os estilos usam exclusivamente variáveis do design system
 - Estado vazio tratado com mensagem amigável
+
+---
+
+## PROMPT 10: Widget de Calendário e Agenda
+
+**Status**: ✅ | **Data**: 04/01/2025 | **Build**: ✅ (3 tentativas)
+
+### Implementado
+
+- Componente `AgendaWidget` completamente funcional com calendário interativo e lista de contas
+  - **Header:**
+    - Ícone de calendário (FiCalendar) à esquerda
+    - Título "Agenda" em heading-xs
+  - **Calendário Mensal:**
+    - Grid de calendário com dias da semana em português (Dom, Seg, Ter, Qua, Qui, Sex, Sáb)
+    - Semana começa no domingo (localização brasileira)
+    - Navegação entre meses com setas esquerda/direita
+    - Header do calendário mostra mês e ano atual com dropdown (visual)
+    - **Estados Visuais dos Dias:**
+      - **Dia comum:** Fundo transparente, texto cinza escuro, hover com fundo cinza claro
+      - **Dia atual:** Fundo cinza médio (`bg-neutral-500`), texto branco
+      - **Dia selecionado:** Fundo verde-limão (`bg-brand-500`), texto preto
+      - **Dia com conta pendente:** Ponto vermelho pequeno (6px) abaixo do círculo do dia
+    - Círculos de 32px de diâmetro (`w-8 h-8`) para cada dia
+    - Seleção única: apenas um dia pode estar selecionado por vez
+    - Ao clicar em um dia, ele é selecionado e a lista de contas é atualizada
+    - Ao mudar de mês, a seleção é limpa automaticamente
+  - **Lista de Contas do Dia Selecionado:**
+    - Header da seção mostra data formatada em português (ex: "24 de Janeiro")
+    - Badge com número de contas quando houver (ex: "3")
+    - **Estrutura do Item de Conta:**
+      - Indicador circular pequeno (6px) à esquerda:
+        - Verde (`bg-brand-500`) se conta está paga
+        - Vermelho (`bg-red-400`) se conta está pendente
+      - Descrição da conta em texto negrito pequeno (label-sm)
+      - Valor formatado em moeda brasileira (R$ X.XXX,XX) em texto cinza
+      - Botão de check à direita (apenas para contas pendentes):
+        - Borda cinza, fundo transparente
+        - Hover: fundo verde-limão, borda verde, ícone branco
+        - Ao clicar, marca a conta como paga
+    - Cards com fundo cinza claro (`bg-neutral-200`), borda cinza (`border-neutral-300`), bordas arredondadas (`rounded-xl`)
+    - Espaçamento de 8px (`gap-2`) entre cards
+  - **Mensagem Vazia:**
+    - Quando não há contas no dia selecionado, exibe "Nada hoje."
+    - Borda tracejada cinza (`border-dashed border-neutral-300`)
+    - Texto cinza claro centralizado
+  - **Botões de Ação:**
+    - Botão "+" para adicionar nova conta (preparado para PROMPT 14)
+    - Botão seta direita para ver mais (preparado para view completa)
+- **Estrutura de Dados - Interface `Bill`:**
+  - `id`: string - Identificador único
+  - `dueDate`: Date - Data de vencimento
+  - `description`: string - Descrição da conta (ex: "Conta de Luz")
+  - `amount`: number - Valor da conta
+  - `status`: 'pending' | 'paid' - Status da conta
+  - `type`: 'fixed' | 'card' - Tipo de conta (fixa recorrente ou fatura de cartão)
+- **Integração com Contexto:**
+  - Estado global `bills` no `FinanceContext`
+  - Funções CRUD para Bills:
+    - `addBill(bill: Bill)` - Adicionar nova conta
+    - `updateBill(id: string, updates: Partial<Bill>)` - Atualizar conta
+    - `deleteBill(id: string)` - Deletar conta
+  - Hook `useFinance()` para acessar bills e funções
+- **Dados Mock:**
+  - 4 contas criadas para janeiro de 2026:
+    - Conta de Luz: R$ 150,00 - Vence 24/01 - Pendente
+    - Conta de Água: R$ 85,50 - Vence 24/01 - Pendente
+    - Internet: R$ 99,90 - Vence 28/01 - Pendente
+    - Fatura Nubank: R$ 5.245,00 - Vence 05/01 - Pendente
+- **Lógica de Indicadores:**
+  - Função `hasPendingBills(day: number)` verifica se há contas pendentes no dia
+  - Ponto vermelho aparece apenas em dias com contas pendentes
+  - Ponto desaparece automaticamente quando todas as contas do dia são pagas
+- **Interação de Pagamento:**
+  - Ao clicar no botão de check, a conta muda de status "pending" para "paid"
+  - Indicador circular muda de vermelho para verde
+  - Se era a última conta pendente do dia, o ponto vermelho no calendário desaparece
+  - Atualização em tempo real via contexto React
+
+### Tokens
+
+**Semânticas**: N/A (ainda não aplicadas)
+
+**Primitivas** (utilizadas):
+- Cores:
+  - `bg-neutral-0` - Fundo branco do widget e calendário
+  - `bg-neutral-200` - Fundo cinza claro dos cards de contas e hover dos botões
+  - `bg-neutral-300` - Borda do calendário
+  - `bg-neutral-500` - Fundo do dia atual
+  - `bg-brand-500` - Fundo do dia selecionado e indicador de conta paga
+  - `bg-red-400` - Indicador de conta pendente e ponto vermelho no calendário
+  - `border-neutral-300` - Bordas dos cards e calendário
+  - `text-neutral-1100` - Texto preto (títulos, descrições, números)
+  - `text-neutral-500` - Texto cinza (mensagem vazia, valores)
+  - `text-neutral-0` - Texto branco (dia atual)
+- Espaçamentos:
+  - `p-6` (24px) - Padding do widget principal
+  - `px-6 py-6` (24px) - Padding do grid do calendário
+  - `gap-[14px]` - Espaçamento entre ícone e título no header
+  - `gap-6` (24px) - Espaçamento vertical entre semanas do calendário
+  - `gap-2` (8px) - Espaçamento entre cards de contas
+  - `gap-4` (16px) - Espaçamento entre elementos da lista de contas
+  - `p-4` (16px) - Padding dos cards de contas
+  - `p-8` (32px) - Padding da mensagem vazia
+- Tipografia:
+  - `text-heading-xs` - Título "Agenda"
+  - `text-label-sm` - Nome dos dias da semana, data formatada, descrição das contas
+  - `text-label-lg` - Data formatada no header da lista
+  - `text-paragraph-md` - Mensagem vazia
+  - `text-paragraph-sm` - Valor das contas
+- Shapes:
+  - `rounded-xl` (20px) - Bordas arredondadas do widget e cards
+  - `rounded-[28px]` - Bordas arredondadas do calendário
+  - `rounded-full` - Círculos dos dias e botões
+  - `rounded-full` - Indicadores circulares de status
+- Efeitos:
+  - `hover:bg-neutral-200` - Hover nos dias comuns e botões
+  - `transition-all duration-200` - Transições suaves nos dias
+  - `transition-colors` - Transições de cor nos botões
+
+**Conversões**: 
+- `w-8 h-8` (32px) - Tamanho dos círculos dos dias (conforme especificação: 32px de diâmetro)
+- `w-1.5 h-1.5` (6px) - Tamanho do ponto vermelho indicador de conta pendente (conforme especificação: 6px de diâmetro)
+- `rounded-[28px]` - Border-radius específico do calendário (não existe token específico, usando valor arbitrário do Tailwind)
+- `gap-[14px]` - Gap específico entre ícone e título (usando valor arbitrário do Tailwind)
+
+### Build
+
+**Tentativas**: 3 | **Erros**: 0 | **Status**: ✅ Sucesso
+
+**Correções aplicadas:**
+1. Adicionada interface `Bill` ao `src/types/index.ts`
+2. Adicionado estado `bills` ao `FinanceContext`
+3. Adicionadas funções CRUD para Bills
+4. Criados dados mock de bills
+5. Implementado calendário funcional com seleção de dia
+6. Implementada lista de contas do dia selecionado
+7. Implementada funcionalidade de marcar como pago
+8. Ajustado padding do container do calendário para evitar corte das datas
+
+### Commit
+
+**Hash**: 4dacaf3  
+**Mensagem**: feat: implementar calendário funcional com seleção de dia, lista de contas e marcação como pago  
+**Status**: ✅ Commit realizado e push para GitHub concluído
+
+### Arquivos Criados
+
+- `src/components/dashboard/AgendaWidget.tsx` - Widget de calendário e agenda (reescrito completamente)
+- Arquivos modificados:
+  - `src/types/index.ts` - Adicionada interface `Bill` com tipos `BillStatus` e `BillType`
+  - `src/contexts/FinanceContext.tsx` - Adicionado estado `bills` e funções CRUD (`addBill`, `updateBill`, `deleteBill`)
+  - `src/utils/mockData.ts` - Adicionados dados mock de 4 contas para janeiro de 2026
+
+### Notas
+
+- Calendário totalmente funcional com seleção de dia e atualização em tempo real
+- Indicadores visuais de contas pendentes (ponto vermelho) aparecem automaticamente nos dias correspondentes
+- Lista de contas do dia selecionado mostra todas as contas (pendentes e pagas) com indicadores de status
+- Funcionalidade de marcar como pago atualiza o estado global e remove indicadores automaticamente
+- Formatação de data em português brasileiro (ex: "24 de Janeiro")
+- Formatação de moeda brasileira completa (R$ X.XXX,XX)
+- Layout totalmente responsivo
+- Estados visuais claros e distintos (comum, atual, selecionado, com conta pendente)
+- Mensagem vazia amigável quando não há contas no dia
+- Botões de ação preparados para funcionalidades futuras (adicionar conta, ver mais)
+- Todos os estilos usam exclusivamente variáveis do design system
+- Integração completa com contexto React para gerenciamento de estado global
