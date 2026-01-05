@@ -2,6 +2,7 @@ import SummaryCards from '../components/dashboard/SummaryCards';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
 import CategoryExpensesCarousel from '../components/dashboard/CategoryExpensesCarousel';
 import FinancialFlowChart from '../components/dashboard/FinancialFlowChart';
+import CreditCardsWidget from '../components/dashboard/CreditCardsWidget';
 
 export default function Dashboard() {
   return (
@@ -11,8 +12,9 @@ export default function Dashboard() {
       <div className="mt-8">
         <CategoryExpensesCarousel />
       </div>
-      <div className="mt-8">
+      <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
         <FinancialFlowChart />
+        <CreditCardsWidget />
       </div>
     </div>
   );

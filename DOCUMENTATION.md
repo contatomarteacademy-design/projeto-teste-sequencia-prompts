@@ -10,7 +10,7 @@
 - [x] PROMPT 6: Header do Dashboard com Controles
 - [x] PROMPT 7: Carrossel de Gastos por Categoria
 - [x] PROMPT 8: Gráfico de Fluxo Financeiro
-- [ ] PROMPT 9: Widget de Cartões de Crédito
+- [x] PROMPT 9: Widget de Cartões de Crédito
 - [ ] PROMPT 10: Widget de Calendário e Agenda
 - [ ] PROMPT 11: Seção de Objetivos Financeiros
 - [ ] PROMPT 12: Tabela de Transações Detalhada
@@ -946,9 +946,9 @@
 
 ### Commit
 
-**Hash**: e39927b (implementação inicial), (consulte git log para hash mais recente)  
+**Hash**: e39927b (implementação inicial), 5f11367 (refactor interativo)  
 **Mensagem**: feat: gráfico de fluxo financeiro | refactor: gráfico interativo com Recharts  
-**Status**: ⏳ Aguardando commit automático
+**Status**: ✅ Commit realizado e push para GitHub concluído
 
 ### Arquivos Criados
 
