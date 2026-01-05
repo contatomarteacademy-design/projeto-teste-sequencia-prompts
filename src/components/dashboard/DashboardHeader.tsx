@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useFinance } from '../../contexts/FinanceContext';
-import { FiSearch, FiChevronDown } from 'react-icons/fi';
+import { FiSearch, FiChevronDown, FiFilter, FiCalendar, FiPlus } from 'react-icons/fi';
 
 type PeriodOption = 'current-month' | 'last-month' | 'last-3-months' | 'custom';
 
@@ -67,18 +67,21 @@ export default function DashboardHeader() {
   };
 
   const getPeriodLabel = () => {
-    switch (period) {
-      case 'current-month':
-        return 'Este mês';
-      case 'last-month':
-        return 'Mês anterior';
-      case 'last-3-months':
-        return 'Últimos 3 meses';
-      case 'custom':
-        return 'Personalizado';
-      default:
-        return 'Este mês';
+    const now = new Date();
+    if (period === 'current-month') {
+      const start = new Date(now.getFullYear(), now.getMonth(), 1);
+      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      return `${start.getDate().toString().padStart(2, '0')} ${start.toLocaleDateString('pt-BR', { month: 'short' })} - ${end.getDate().toString().padStart(2, '0')} ${end.toLocaleDateString('pt-BR', { month: 'short' })} ${end.getFullYear()}`;
+    } else if (period === 'last-month') {
+      const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const end = new Date(now.getFullYear(), now.getMonth(), 0);
+      return `${start.getDate().toString().padStart(2, '0')} ${start.toLocaleDateString('pt-BR', { month: 'short' })} - ${end.getDate().toString().padStart(2, '0')} ${end.toLocaleDateString('pt-BR', { month: 'short' })} ${end.getFullYear()}`;
+    } else if (period === 'last-3-months') {
+      const start = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      return `${start.getDate().toString().padStart(2, '0')} ${start.toLocaleDateString('pt-BR', { month: 'short' })} - ${end.getDate().toString().padStart(2, '0')} ${end.toLocaleDateString('pt-BR', { month: 'short' })} ${end.getFullYear()}`;
     }
+    return 'Personalizado';
   };
 
   const getSelectedMemberName = () => {
@@ -94,22 +97,47 @@ export default function DashboardHeader() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Mostrar até 3 membros + botão adicionar
+  const visibleMembers = familyMembers.slice(0, 3);
+  const hasMoreMembers = familyMembers.length > 3;
+
   return (
     <div className="w-full mb-6">
-      {/* Título e Controles */}
+      {/* Header conforme design do Figma */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        {/* Título */}
-        <h1 className="text-heading-md text-neutral-1100 font-bold">Dashboard</h1>
+        {/* Lado esquerdo: Busca, Filtro, Data, Membros */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Barra de Pesquisa */}
+          <div className="relative flex-1 sm:flex-initial sm:min-w-[280px] lg:min-w-[346px]">
+            <FiSearch
+              size={24}
+              className="absolute left-6 top-1/2 -translate-y-1/2 text-neutral-1100 pointer-events-none"
+            />
+            <input
+              type="text"
+              placeholder="Pesquisar"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              className="w-full bg-neutral-0 border border-neutral-300 rounded-[100px] px-6 py-4 pl-14 text-paragraph-lg text-neutral-1100 placeholder:text-neutral-1100 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:border-transparent"
+            />
+          </div>
 
-        {/* Controles */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          {/* Seletor de Período */}
+          {/* Botão de Filtro */}
+          <button
+            className="bg-neutral-0 border border-neutral-300 rounded-[100px] p-4 flex items-center justify-center hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+            aria-label="Filtros"
+          >
+            <FiFilter size={24} className="text-neutral-1100" />
+          </button>
+
+          {/* Seletor de Data */}
           <div className="relative">
             <button
               onClick={() => setIsPeriodDropdownOpen(!isPeriodDropdownOpen)}
-              className="flex items-center justify-between gap-2 bg-neutral-0 border border-neutral-300 rounded-xl px-4 py-3 min-w-[160px] hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+              className="flex items-center gap-4 bg-neutral-0 border border-neutral-300 rounded-[100px] px-6 py-4 hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
             >
-              <span className="text-label-md text-neutral-1100 font-semibold">
+              <FiCalendar size={24} className="text-neutral-1100" />
+              <span className="text-paragraph-lg text-neutral-1100">
                 {getPeriodLabel()}
               </span>
               <FiChevronDown
@@ -128,7 +156,7 @@ export default function DashboardHeader() {
                   onClick={() => setIsPeriodDropdownOpen(false)}
                   aria-hidden="true"
                 />
-                <div className="absolute top-full left-0 mt-2 bg-neutral-0 border border-neutral-300 rounded-xl shadow-lg z-50 min-w-[160px]">
+                <div className="absolute top-full left-0 mt-2 bg-neutral-0 border border-neutral-300 rounded-xl shadow-lg z-50 min-w-[200px]">
                   <button
                     onClick={() => handlePeriodChange('current-month')}
                     className={`w-full text-left px-4 py-3 text-label-md font-semibold hover:bg-neutral-200 transition-colors first:rounded-t-xl last:rounded-b-xl ${
@@ -174,21 +202,58 @@ export default function DashboardHeader() {
             )}
           </div>
 
-          {/* Seletor de Membro */}
-          <div className="relative">
+          {/* Avatares dos Membros da Família */}
+          <div className="flex items-center pl-0 pr-4">
+            {visibleMembers.map((member, index) => (
+              <button
+                key={member.id}
+                onClick={() => handleMemberChange(member.id)}
+                className={`
+                  relative
+                  border-2
+                  border-neutral-0
+                  rounded-[100px]
+                  overflow-hidden
+                  ${index > 0 ? '-ml-4' : ''}
+                  ${selectedMember === member.id ? 'ring-2 ring-brand-500' : ''}
+                  focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2
+                `}
+                style={{ zIndex: visibleMembers.length - index }}
+                aria-label={`Selecionar ${member.name}`}
+              >
+                <div className="w-[60px] h-[60px] bg-neutral-300 flex items-center justify-center">
+                  {member.avatarUrl ? (
+                    <img
+                      src={member.avatarUrl}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-label-lg text-neutral-1100 font-semibold">
+                      {member.name.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                </div>
+              </button>
+            ))}
+            {/* Botão Adicionar Membro */}
             <button
               onClick={() => setIsMemberDropdownOpen(!isMemberDropdownOpen)}
-              className="flex items-center justify-between gap-2 bg-neutral-0 border border-neutral-300 rounded-xl px-4 py-3 min-w-[160px] hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+              className={`
+                relative
+                border-2
+                border-neutral-0
+                rounded-[100px]
+                bg-neutral-300
+                -ml-4
+                focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2
+              `}
+              style={{ zIndex: 0 }}
+              aria-label="Adicionar membro ou ver todos"
             >
-              <span className="text-label-md text-neutral-1100 font-semibold">
-                {getSelectedMemberName()}
-              </span>
-              <FiChevronDown
-                size={20}
-                className={`text-neutral-500 transition-transform ${
-                  isMemberDropdownOpen ? 'rotate-180' : ''
-                }`}
-              />
+              <div className="w-[60px] h-[60px] flex items-center justify-center">
+                <FiPlus size={24} className="text-neutral-1100" />
+              </div>
             </button>
 
             {/* Dropdown de Membro */}
@@ -199,7 +264,7 @@ export default function DashboardHeader() {
                   onClick={() => setIsMemberDropdownOpen(false)}
                   aria-hidden="true"
                 />
-                <div className="absolute top-full left-0 mt-2 bg-neutral-0 border border-neutral-300 rounded-xl shadow-lg z-50 min-w-[160px]">
+                <div className="absolute top-full right-0 mt-2 bg-neutral-0 border border-neutral-300 rounded-xl shadow-lg z-50 min-w-[160px]">
                   <button
                     onClick={() => handleMemberChange(null)}
                     className={`w-full text-left px-4 py-3 text-label-md font-semibold hover:bg-neutral-200 transition-colors first:rounded-t-xl ${
@@ -227,24 +292,22 @@ export default function DashboardHeader() {
               </>
             )}
           </div>
-
-          {/* Campo de Busca */}
-          <div className="relative flex-1 sm:flex-initial sm:min-w-[240px]">
-            <FiSearch
-              size={20}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none"
-            />
-            <input
-              type="text"
-              placeholder="Buscar transações..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              className="w-full bg-neutral-0 border border-neutral-300 rounded-xl px-4 py-3 pl-12 text-label-md text-neutral-1100 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:border-transparent"
-            />
-          </div>
         </div>
+
+        {/* Lado direito: Botão Nova Transação */}
+        <button
+          onClick={() => {
+            // TODO: Abrir modal de nova transação (será implementado no PROMPT 13)
+            console.log('Abrir modal de nova transação');
+          }}
+          className="bg-neutral-1100 flex items-center gap-3 px-6 py-4 rounded-[100px] hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+        >
+          <FiPlus size={24} className="text-neutral-0" />
+          <span className="text-label-lg text-neutral-0 font-semibold">
+            Nova transação
+          </span>
+        </button>
       </div>
     </div>
   );
 }
-
