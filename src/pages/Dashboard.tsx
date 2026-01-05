@@ -10,7 +10,7 @@ export default function Dashboard() {
       <DashboardHeader />
       
       {/* Layout em 2 colunas no desktop */}
-      <div className="mt-8 grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-8 lg:gap-[15px] w-full">
+      <div className="mt-8 grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-8 lg:gap-9 w-full">
         {/* Coluna Esquerda: Carrossel, Cards de Resumo e Gráfico */}
         <div className="flex flex-col gap-8 min-w-0 w-full">
           <SummaryCards />
