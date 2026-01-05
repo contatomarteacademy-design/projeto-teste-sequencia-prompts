@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useFinance } from '../../contexts/FinanceContext';
 import { FiSearch, FiChevronDown, FiFilter, FiCalendar, FiPlus, FiCheck } from 'react-icons/fi';
+import DateRangeCalendar from '../ui/DateRangeCalendar';
 
 type PeriodOption = 'current-month' | 'last-month' | 'last-3-months' | 'custom';
 
@@ -10,6 +11,7 @@ export default function DashboardHeader() {
     selectedMember,
     searchText,
     transactionType,
+    dateRange,
     setSelectedMember,
     setDateRange,
     setSearchText,
@@ -17,7 +19,7 @@ export default function DashboardHeader() {
   } = useFinance();
 
   const [period, setPeriod] = useState<PeriodOption>('current-month');
-  const [isPeriodDropdownOpen, setIsPeriodDropdownOpen] = useState(false);
+  const [isPeriodCalendarOpen, setIsPeriodCalendarOpen] = useState(false);
   const [isMemberDropdownOpen, setIsMemberDropdownOpen] = useState(false);
   const [isFilterPopoverOpen, setIsFilterPopoverOpen] = useState(false);
   const [hoveredMemberId, setHoveredMemberId] = useState<string | null>(null);
@@ -46,9 +48,9 @@ export default function DashboardHeader() {
     return { start, end };
   };
 
+  // Função mantida para compatibilidade, mas agora o calendário gerencia as datas diretamente
   const handlePeriodChange = (newPeriod: PeriodOption) => {
     setPeriod(newPeriod);
-    setIsPeriodDropdownOpen(false);
 
     if (newPeriod === 'current-month') {
       const { start, end } = getCurrentMonthRange();
@@ -60,8 +62,8 @@ export default function DashboardHeader() {
       const { start, end } = getLast3MonthsRange();
       setDateRange({ startDate: start, endDate: end });
     } else if (newPeriod === 'custom') {
-      // Custom será implementado com date picker no futuro
-      setDateRange({ startDate: null, endDate: null });
+      // Custom agora é gerenciado pelo calendário
+      // Não resetar datas aqui, deixar o calendário gerenciar
     }
   };
 
@@ -267,7 +269,7 @@ export default function DashboardHeader() {
           {/* Seletor de Data */}
           <div className="relative">
             <button
-              onClick={() => setIsPeriodDropdownOpen(!isPeriodDropdownOpen)}
+              onClick={() => setIsPeriodCalendarOpen(!isPeriodCalendarOpen)}
               className="flex items-center gap-4 bg-neutral-0 border border-neutral-300 rounded-[100px] px-6 py-4 hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
             >
               <FiCalendar size={24} className="text-neutral-1100" />
@@ -277,64 +279,51 @@ export default function DashboardHeader() {
               <FiChevronDown
                 size={20}
                 className={`text-neutral-500 transition-transform ${
-                  isPeriodDropdownOpen ? 'rotate-180' : ''
+                  isPeriodCalendarOpen ? 'rotate-180' : ''
                 }`}
               />
             </button>
 
-            {/* Dropdown de Período */}
-            {isPeriodDropdownOpen && (
+            {/* Calendário de Período */}
+            {isPeriodCalendarOpen && (
               <>
                 <div
                   className="fixed inset-0 z-40"
-                  onClick={() => setIsPeriodDropdownOpen(false)}
+                  onClick={() => setIsPeriodCalendarOpen(false)}
                   aria-hidden="true"
                 />
-                <div className="absolute top-full left-0 mt-2 bg-neutral-0 border border-neutral-300 rounded-xl shadow-lg z-50 min-w-[200px]">
-                  <button
-                    onClick={() => handlePeriodChange('current-month')}
-                    className={`w-full text-left px-4 py-3 text-label-md font-semibold hover:bg-neutral-200 transition-colors first:rounded-t-xl ${
-                      period === 'current-month'
-                        ? 'bg-neutral-200 text-neutral-1100'
-                        : 'text-neutral-1100'
-                    }`}
-                  >
-                    Este mês
-                  </button>
-                  <button
-                    onClick={() => handlePeriodChange('last-month')}
-                    className={`w-full text-left px-4 py-3 text-label-md font-semibold hover:bg-neutral-200 transition-colors ${
-                      period === 'last-month'
-                        ? 'bg-neutral-200 text-neutral-1100'
-                        : 'text-neutral-1100'
-                    }`}
-                  >
-                    Mês passado
-                  </button>
-                  <button
-                    onClick={() => handlePeriodChange('last-3-months')}
-                    className={`w-full text-left px-4 py-3 text-label-md font-semibold hover:bg-neutral-200 transition-colors ${
-                      period === 'last-3-months'
-                        ? 'bg-neutral-200 text-neutral-1100'
-                        : 'text-neutral-1100'
-                    }`}
-                  >
-                    Últimos 3 meses
-                  </button>
-                  <button
-                    onClick={() => {
-                      // TODO: Implementar calendário para seleção customizada (será implementado no futuro)
-                      handlePeriodChange('custom');
+                <div className="absolute top-full left-0 mt-2 z-50 lg:left-auto lg:right-0">
+                  <DateRangeCalendar
+                    startDate={dateRange.startDate}
+                    endDate={dateRange.endDate}
+                    onDateRangeSelect={(start, end) => {
+                      setDateRange({ startDate: start, endDate: end });
+                      // Atualizar período baseado nas datas selecionadas
+                      if (start && end) {
+                        const now = new Date();
+                        const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+                        const currentMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                        const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                        const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+                        
+                        if (
+                          start.getTime() === currentMonthStart.getTime() &&
+                          end.getTime() === currentMonthEnd.getTime()
+                        ) {
+                          setPeriod('current-month');
+                        } else if (
+                          start.getTime() === lastMonthStart.getTime() &&
+                          end.getTime() === lastMonthEnd.getTime()
+                        ) {
+                          setPeriod('last-month');
+                        } else {
+                          setPeriod('custom');
+                        }
+                      }
                     }}
-                    className={`w-full text-left px-4 py-3 text-label-md font-semibold hover:bg-neutral-200 transition-colors last:rounded-b-xl ${
-                      period === 'custom'
-                        ? 'bg-neutral-200 text-neutral-1100'
-                        : 'text-neutral-1100'
-                    }`}
-                  >
-                    Personalizado
-                  </button>
-                  {/* TODO: Adicionar botão "Este ano" quando calendário for implementado */}
+                    onClose={() => setIsPeriodCalendarOpen(false)}
+                    isMobile={typeof window !== 'undefined' && window.innerWidth < 1024}
+                  />
                 </div>
               </>
             )}
