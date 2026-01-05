@@ -49,23 +49,7 @@ export default function DashboardHeader() {
   };
 
   // Função mantida para compatibilidade, mas agora o calendário gerencia as datas diretamente
-  const handlePeriodChange = (newPeriod: PeriodOption) => {
-    setPeriod(newPeriod);
-
-    if (newPeriod === 'current-month') {
-      const { start, end } = getCurrentMonthRange();
-      setDateRange({ startDate: start, endDate: end });
-    } else if (newPeriod === 'last-month') {
-      const { start, end } = getLastMonthRange();
-      setDateRange({ startDate: start, endDate: end });
-    } else if (newPeriod === 'last-3-months') {
-      const { start, end } = getLast3MonthsRange();
-      setDateRange({ startDate: start, endDate: end });
-    } else if (newPeriod === 'custom') {
-      // Custom agora é gerenciado pelo calendário
-      // Não resetar datas aqui, deixar o calendário gerenciar
-    }
-  };
+  // Função removida - agora o calendário gerencia as datas diretamente
 
   const handleMemberChange = (memberId: string | null) => {
     setSelectedMember(memberId);
