@@ -579,16 +579,27 @@
 
 ## PROMPT 6: Header do Dashboard com Controles
 
-**Status**: ✅ | **Data**: 04/01/2025 | **Build**: ✅ (1 tentativa)
+**Status**: ✅ | **Data**: 04/01/2025 | **Build**: ✅ (2 tentativas - revisão de design)
 
 ### Implementado
 
-- Componente DashboardHeader
-  - Título "Dashboard" em heading-md (text-heading-md)
-  - Layout responsivo: horizontal desktop, vertical mobile
-  - Espaçamento adequado entre título e controles (gap-4)
+- Componente DashboardHeader redesenhado conforme Figma
+  - Layout horizontal: controles à esquerda, botão à direita
+  - Sem título "Dashboard" (removido conforme design)
+  - Layout responsivo: empilha verticalmente no mobile
+- Barra de Pesquisa (à esquerda)
+  - Input grande com ícone de lupa (FiSearch) à esquerda
+  - Placeholder "Pesquisar"
+  - Largura mínima: 280px mobile, 346px desktop
+  - Formato rounded-[100px] conforme design
+  - Integração com setSearchText do contexto global
+- Botão de Filtro
+  - Botão circular branco com ícone de filtro (FiFilter)
+  - Posicionado entre busca e seletor de data
+  - Hover com fundo cinza claro
 - Seletor de Período (Dropdown)
-  - Botão com label dinâmico baseado no período selecionado
+  - Botão com ícone de calendário (FiCalendar) e data formatada
+  - Formato de data: "01 Jan - 31 Jan 2026" (formato brasileiro)
   - Opções: "Este mês", "Mês anterior", "Últimos 3 meses", "Personalizado"
   - Dropdown com lista de opções
   - Item selecionado destacado (bg-neutral-200)
@@ -596,24 +607,29 @@
   - Cálculo automático de datas para cada período
   - Integração com setDateRange do contexto global
   - Inicializa automaticamente com "Este mês" ao montar
-- Seletor de Membro da Família (Dropdown)
-  - Botão mostrando nome do membro selecionado ou "Todos"
-  - Dropdown com lista de todos os membros + opção "Todos"
+- Avatares dos Membros da Família
+  - Até 3 avatares visíveis sobrepostos (z-index decrescente)
+  - Cada avatar com borda branca de 2px (border-2 border-neutral-0)
+  - Avatar selecionado com ring verde-limão (ring-2 ring-brand-500)
+  - Clique no avatar selecionado o membro
+  - Avatares com inicial se não houver avatarUrl
+  - Botão adicionar membro ao lado (círculo cinza com ícone de plus)
+  - Dropdown ao clicar no botão adicionar: lista todos os membros + opção "Todos"
   - Item selecionado destacado (bg-neutral-200)
-  - Ícone de chevron que rotaciona quando dropdown está aberto
   - Integração com setSelectedMember do contexto global
-- Campo de Busca Textual
-  - Input de texto com ícone de busca (FiSearch) à esquerda
-  - Placeholder "Buscar transações..."
-  - Integração com setSearchText do contexto global
-  - Busca em tempo real conforme usuário digita
-  - Focus ring verde-limão (focus:ring-brand-500)
+- Botão Nova Transação (à direita)
+  - Botão preto grande (bg-neutral-1100) com texto branco
+  - Ícone de plus (FiPlus) branco à esquerda do texto
+  - Texto "Nova transação" em label-lg
+  - Formato rounded-[100px] conforme design
+  - Hover com opacidade reduzida
+  - TODO: Abrir modal de nova transação (será implementado no PROMPT 13)
 - Layout Responsivo
-  - Desktop (lg): título à esquerda, controles à direita em linha (flex-row)
-  - Mobile/Tablet: título acima, controles abaixo em coluna (flex-col)
-  - Controles em linha no mobile quando há espaço (sm:flex-row)
-  - Dropdowns com largura mínima adequada (min-w-[160px])
-  - Campo de busca com largura flexível (flex-1 mobile, min-w-[240px] desktop)
+  - Desktop (lg): controles à esquerda em linha, botão à direita (flex-row justify-between)
+  - Mobile/Tablet: todos os elementos empilham verticalmente (flex-col)
+  - Controles podem quebrar linha quando necessário (flex-wrap)
+  - Barra de pesquisa com largura flexível no mobile (flex-1), largura fixa no desktop
+  - Dropdowns com largura mínima adequada
 - Dropdowns com Overlay
   - Overlay escuro (fixed inset-0) que fecha dropdown ao clicar fora
   - Dropdowns posicionados absolutamente abaixo dos botões
@@ -632,25 +648,32 @@
 **Primitivas** (utilizadas):
 - Cores:
   - `bg-neutral-0` - Fundo branco dos controles e dropdowns
-  - `bg-neutral-200` - Fundo cinza claro para item selecionado
-  - `bg-neutral-300` - Borda cinza clara
+  - `bg-neutral-1100` - Fundo preto do botão Nova transação
+  - `bg-neutral-200` - Fundo cinza claro para item selecionado e hover
+  - `bg-neutral-300` - Fundo cinza médio para avatares e botão adicionar
   - `border-neutral-300` - Borda dos controles
+  - `border-neutral-0` - Borda branca dos avatares
   - `text-neutral-1100` - Texto preto padrão
-  - `text-neutral-500` - Texto cinza médio (placeholder, ícones)
-  - `text-brand-500` - Verde-limão para focus ring
+  - `text-neutral-0` - Texto branco do botão Nova transação
+  - `text-neutral-500` - Texto cinza médio (chevron)
+  - `text-brand-500` - Verde-limão para focus ring e ring de seleção
 - Espaçamentos:
-  - `p-4` (16px) - Padding do container principal
-  - `px-4 py-3` (16px vertical, 12px horizontal) - Padding dos botões e input
-  - `gap-4` (16px) - Espaçamento entre título e controles
+  - `px-6 py-4` (24px horizontal, 16px vertical) - Padding dos botões principais
+  - `px-6 py-4 pl-14` - Padding do input de busca (com espaço para ícone)
+  - `p-4` (16px) - Padding do botão de filtro
   - `gap-3` (12px) - Espaçamento entre controles
+  - `gap-4` (16px) - Espaçamento no botão Nova transação
   - `mb-6` (24px) - Margem inferior do header
   - `mt-2` (8px) - Margem superior do dropdown
-  - `pl-12` (48px) - Padding esquerdo do input com ícone
+  - `-ml-4` - Margem negativa para sobrepor avatares
+  - `w-[60px] h-[60px]` - Tamanho dos avatares
 - Tipografia:
-  - `text-heading-md` - Título "Dashboard"
-  - `text-label-md` - Labels dos botões e input
+  - `text-paragraph-lg` - Texto da barra de pesquisa e seletor de data
+  - `text-label-lg` - Texto do botão Nova transação
+  - `text-label-md` - Labels dos dropdowns
 - Shapes:
-  - `rounded-xl` (20px) - Bordas arredondadas dos controles e dropdowns
+  - `rounded-[100px]` - Bordas arredondadas de todos os controles (pill shape)
+  - `rounded-xl` (20px) - Bordas arredondadas dos dropdowns
 - Efeitos:
   - `shadow-lg` - Sombra elevada dos dropdowns
   - `hover:bg-neutral-200` - Hover nos botões
@@ -659,9 +682,11 @@
   - `transition-colors` - Transições de cor
 
 **Conversões**: 
-- `min-w-[160px]` - Largura mínima dos dropdowns (não existe token específico, usando valor arbitrário do Tailwind)
-- `min-w-[240px]` - Largura mínima do campo de busca no desktop (não existe token específico, usando valor arbitrário do Tailwind)
-- `pl-12` (48px) - Padding esquerdo do input (não existe token específico, usando valor padrão do Tailwind)
+- `min-w-[280px]` e `min-w-[346px]` - Larguras mínimas da barra de pesquisa (não existe token específico, usando valores arbitrários do Tailwind baseados no design do Figma)
+- `min-w-[200px]` - Largura mínima dos dropdowns (não existe token específico, usando valor arbitrário do Tailwind)
+- `pl-14` (56px) - Padding esquerdo do input de busca para acomodar ícone (não existe token específico, usando valor padrão do Tailwind)
+- `w-[60px] h-[60px]` - Tamanho dos avatares (não existe token específico, usando valor arbitrário do Tailwind baseado no design do Figma)
+- `-ml-4` - Margem negativa para sobrepor avatares (usando token de spacing existente)
 
 ### Build
 
@@ -669,8 +694,8 @@
 
 ### Commit
 
-**Hash**: (consulte git log para hash)  
-**Mensagem**: feat: header do dashboard com controles  
+**Hash**: 3259548 (implementação inicial), 8e8b659 (fix variável não usada), (consulte git log para hash mais recente)  
+**Mensagem**: feat: header do dashboard com controles | refactor: redesenhar header do dashboard conforme Figma  
 **Status**: ✅ Commit realizado e push para GitHub concluído
 
 ### Arquivos Criados
@@ -681,12 +706,19 @@
 
 ### Notas
 
-- Header implementado seguindo design do Figma
+- Header redesenhado completamente para corresponder ao design do Figma
+- Layout horizontal: controles à esquerda, botão Nova transação à direita
+- Barra de pesquisa grande com ícone de lupa, formato pill (rounded-[100px])
+- Botão de filtro circular com ícone de sliders
+- Seletor de data com ícone de calendário e formato brasileiro de data
+- Avatares sobrepostos dos membros da família (até 3 visíveis) com bordas brancas
+- Botão adicionar membro ao lado dos avatares
+- Botão preto grande "Nova transação" à direita com ícone de plus
 - Dropdowns funcionais com overlay e fechamento ao clicar fora
 - Integração completa com contexto global (filtros aplicados automaticamente)
-- Layout responsivo: horizontal desktop, vertical mobile
+- Layout responsivo: empilha verticalmente no mobile
 - Período inicializa automaticamente com "Este mês" ao montar
 - Todos os estilos usam exclusivamente variáveis do design system
-- Ícones de chevron rotacionam quando dropdown está aberto
-- Campo de busca com ícone à esquerda e placeholder adequado
+- Formato de data brasileiro: "01 Jan - 31 Jan 2026"
+- Avatar selecionado destacado com ring verde-limão
 - Focus states para acessibilidade (focus ring verde-limão)
