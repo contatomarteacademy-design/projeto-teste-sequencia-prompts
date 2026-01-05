@@ -7,7 +7,7 @@
 - [x] PROMPT 3: Sistema de Layout e Navegação Mobile
 - [x] PROMPT 4: Context Global e Gerenciamento de Estado
 - [x] PROMPT 5: Cards de Resumo Financeiro
-- [ ] PROMPT 6: Header do Dashboard com Controles
+- [x] PROMPT 6: Header do Dashboard com Controles
 - [ ] PROMPT 7: Carrossel de Gastos por Categoria
 - [ ] PROMPT 8: Gráfico de Fluxo Financeiro
 - [ ] PROMPT 9: Widget de Cartões de Crédito
@@ -501,6 +501,7 @@
   - Cards exibidos no topo da página
   - Utilizam hook useFinance para acessar dados do contexto
   - Valores atualizam automaticamente quando filtros mudam
+  - Padding responsivo: pt-20 (80px) mobile para compensar header fixo, pt-8 (32px) desktop
 
 ### Tokens
 
@@ -546,7 +547,7 @@
 
 ### Commit
 
-**Hash**: 21d94f3 (implementação), 765d6f0 (fix previousBalance), 96ecfd4 (documentação)  
+**Hash**: 21d94f3 (implementação), 765d6f0 (fix previousBalance), 96ecfd4 (documentação), 327b09b (hash), 12c010c (fix border radius), 13733ef (docs border radius), e60a0dc (fix altura), a5d1753 (docs altura), 01e5b2d (fix padding mobile)  
 **Mensagem**: feat: cards de resumo financeiro  
 **Status**: ✅ Commit realizado e push para GitHub concluído
 
@@ -570,3 +571,122 @@
 - Círculo decorativo verde-limão com blur intenso no card de saldo
 - Badge de crescimento com backdrop blur no card de saldo
 - Ícones diferenciados para receitas (seta baixo-esquerda) e despesas (seta cima-direita)
+- Border radius corrigido de 100px para 20px (rounded-xl)
+- Altura igual para todos os cards usando h-full e flex flex-col
+- Padding responsivo no Dashboard para compensar header mobile fixo
+
+---
+
+## PROMPT 6: Header do Dashboard com Controles
+
+**Status**: ✅ | **Data**: 04/01/2025 | **Build**: ✅ (1 tentativa)
+
+### Implementado
+
+- Componente DashboardHeader
+  - Título "Dashboard" em heading-md (text-heading-md)
+  - Layout responsivo: horizontal desktop, vertical mobile
+  - Espaçamento adequado entre título e controles (gap-4)
+- Seletor de Período (Dropdown)
+  - Botão com label dinâmico baseado no período selecionado
+  - Opções: "Este mês", "Mês anterior", "Últimos 3 meses", "Personalizado"
+  - Dropdown com lista de opções
+  - Item selecionado destacado (bg-neutral-200)
+  - Ícone de chevron que rotaciona quando dropdown está aberto
+  - Cálculo automático de datas para cada período
+  - Integração com setDateRange do contexto global
+  - Inicializa automaticamente com "Este mês" ao montar
+- Seletor de Membro da Família (Dropdown)
+  - Botão mostrando nome do membro selecionado ou "Todos"
+  - Dropdown com lista de todos os membros + opção "Todos"
+  - Item selecionado destacado (bg-neutral-200)
+  - Ícone de chevron que rotaciona quando dropdown está aberto
+  - Integração com setSelectedMember do contexto global
+- Campo de Busca Textual
+  - Input de texto com ícone de busca (FiSearch) à esquerda
+  - Placeholder "Buscar transações..."
+  - Integração com setSearchText do contexto global
+  - Busca em tempo real conforme usuário digita
+  - Focus ring verde-limão (focus:ring-brand-500)
+- Layout Responsivo
+  - Desktop (lg): título à esquerda, controles à direita em linha (flex-row)
+  - Mobile/Tablet: título acima, controles abaixo em coluna (flex-col)
+  - Controles em linha no mobile quando há espaço (sm:flex-row)
+  - Dropdowns com largura mínima adequada (min-w-[160px])
+  - Campo de busca com largura flexível (flex-1 mobile, min-w-[240px] desktop)
+- Dropdowns com Overlay
+  - Overlay escuro (fixed inset-0) que fecha dropdown ao clicar fora
+  - Dropdowns posicionados absolutamente abaixo dos botões
+  - Sombra elevada (shadow-lg) para destaque
+  - z-index adequado (z-50 para dropdown, z-40 para overlay)
+  - Animações suaves de abertura/fechamento
+- Integração com Contexto Global
+  - Todos os controles conectados ao FinanceContext via useFinance
+  - Filtros aplicados automaticamente aos cards e outros componentes
+  - Valores atualizam em tempo real quando filtros mudam
+
+### Tokens
+
+**Semânticas**: N/A (ainda não aplicadas)
+
+**Primitivas** (utilizadas):
+- Cores:
+  - `bg-neutral-0` - Fundo branco dos controles e dropdowns
+  - `bg-neutral-200` - Fundo cinza claro para item selecionado
+  - `bg-neutral-300` - Borda cinza clara
+  - `border-neutral-300` - Borda dos controles
+  - `text-neutral-1100` - Texto preto padrão
+  - `text-neutral-500` - Texto cinza médio (placeholder, ícones)
+  - `text-brand-500` - Verde-limão para focus ring
+- Espaçamentos:
+  - `p-4` (16px) - Padding do container principal
+  - `px-4 py-3` (16px vertical, 12px horizontal) - Padding dos botões e input
+  - `gap-4` (16px) - Espaçamento entre título e controles
+  - `gap-3` (12px) - Espaçamento entre controles
+  - `mb-6` (24px) - Margem inferior do header
+  - `mt-2` (8px) - Margem superior do dropdown
+  - `pl-12` (48px) - Padding esquerdo do input com ícone
+- Tipografia:
+  - `text-heading-md` - Título "Dashboard"
+  - `text-label-md` - Labels dos botões e input
+- Shapes:
+  - `rounded-xl` (20px) - Bordas arredondadas dos controles e dropdowns
+- Efeitos:
+  - `shadow-lg` - Sombra elevada dos dropdowns
+  - `hover:bg-neutral-200` - Hover nos botões
+  - `focus:ring-2 focus:ring-brand-500` - Focus ring verde-limão
+  - `transition-transform` - Rotação do ícone chevron
+  - `transition-colors` - Transições de cor
+
+**Conversões**: 
+- `min-w-[160px]` - Largura mínima dos dropdowns (não existe token específico, usando valor arbitrário do Tailwind)
+- `min-w-[240px]` - Largura mínima do campo de busca no desktop (não existe token específico, usando valor arbitrário do Tailwind)
+- `pl-12` (48px) - Padding esquerdo do input (não existe token específico, usando valor padrão do Tailwind)
+
+### Build
+
+**Tentativas**: 1 | **Erros**: 0 | **Status**: ✅ Sucesso
+
+### Commit
+
+**Hash**: (será gerado após commit)  
+**Mensagem**: feat: header do dashboard com controles  
+**Status**: ⏳ Commit será realizado após documentação
+
+### Arquivos Criados
+
+- `src/components/dashboard/DashboardHeader.tsx` - Componente header com controles
+- Arquivos modificados:
+  - `src/pages/Dashboard.tsx` - Integração do DashboardHeader
+
+### Notas
+
+- Header implementado seguindo design do Figma
+- Dropdowns funcionais com overlay e fechamento ao clicar fora
+- Integração completa com contexto global (filtros aplicados automaticamente)
+- Layout responsivo: horizontal desktop, vertical mobile
+- Período inicializa automaticamente com "Este mês" ao montar
+- Todos os estilos usam exclusivamente variáveis do design system
+- Ícones de chevron rotacionam quando dropdown está aberto
+- Campo de busca com ícone à esquerda e placeholder adequado
+- Focus states para acessibilidade (focus ring verde-limão)
