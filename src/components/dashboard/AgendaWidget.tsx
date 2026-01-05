@@ -124,7 +124,7 @@ export default function AgendaWidget() {
         {/* Grid do Calendário */}
         <div className="px-3 py-0">
           {/* Dias da semana */}
-          <div className="grid grid-cols-7 h-12">
+          <div className="grid grid-cols-7 h-12 mb-0">
             {weekDays.map((day, index) => (
               <div
                 key={index}
@@ -136,58 +136,60 @@ export default function AgendaWidget() {
           </div>
 
           {/* Semanas do mês */}
-          {Array.from({ length: Math.ceil((startingDayOfWeek + daysInMonth) / 7) }).map(
-            (_, weekIndex) => {
-              const weekDays = [];
-              for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
-                const dayNumber = weekIndex * 7 + dayIndex - startingDayOfWeek + 1;
-                if (dayNumber < 1 || dayNumber > daysInMonth) {
-                  weekDays.push(
-                    <div
-                      key={`empty-${weekIndex}-${dayIndex}`}
-                      className="flex items-center justify-center h-12"
-                    />
-                  );
-                } else {
-                  const dayEvents = getEventsForDate(dayNumber);
-                  const hasEvent = dayEvents.length > 0;
-                  const isCurrentDay = isToday(dayNumber);
+          <div className="flex flex-col gap-2">
+            {Array.from({ length: Math.ceil((startingDayOfWeek + daysInMonth) / 7) }).map(
+              (_, weekIndex) => {
+                const weekDays = [];
+                for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+                  const dayNumber = weekIndex * 7 + dayIndex - startingDayOfWeek + 1;
+                  if (dayNumber < 1 || dayNumber > daysInMonth) {
+                    weekDays.push(
+                      <div
+                        key={`empty-${weekIndex}-${dayIndex}`}
+                        className="flex items-center justify-center h-12"
+                      />
+                    );
+                  } else {
+                    const dayEvents = getEventsForDate(dayNumber);
+                    const hasEvent = dayEvents.length > 0;
+                    const isCurrentDay = isToday(dayNumber);
 
-                  weekDays.push(
-                    <div
-                      key={dayNumber}
-                      className="flex items-center justify-center h-12 relative"
-                    >
-                      {isCurrentDay ? (
-                        <div className="w-10 h-10 bg-brand-500 rounded-full flex items-center justify-center">
-                          <span className="text-label-sm font-medium text-neutral-1100">
-                            {dayNumber}
-                          </span>
-                        </div>
-                      ) : hasEvent ? (
-                        <div className="w-10 h-10 border border-red-400 rounded-full flex items-center justify-center">
-                          <span className="text-paragraph-md text-red-400">
-                            {dayNumber}
-                          </span>
-                        </div>
-                      ) : (
-                        <div className="w-10 h-10 rounded-full flex items-center justify-center">
-                          <span className="text-paragraph-md text-neutral-1100">
-                            {dayNumber}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  );
+                    weekDays.push(
+                      <div
+                        key={dayNumber}
+                        className="flex items-center justify-center h-12 relative"
+                      >
+                        {isCurrentDay ? (
+                          <div className="w-10 h-10 bg-brand-500 rounded-full flex items-center justify-center">
+                            <span className="text-label-sm font-medium text-neutral-1100">
+                              {dayNumber}
+                            </span>
+                          </div>
+                        ) : hasEvent ? (
+                          <div className="w-10 h-10 border border-red-400 rounded-full flex items-center justify-center">
+                            <span className="text-paragraph-md text-red-400">
+                              {dayNumber}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center">
+                            <span className="text-paragraph-md text-neutral-1100">
+                              {dayNumber}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
                 }
+                return (
+                  <div key={weekIndex} className="grid grid-cols-7 h-12">
+                    {weekDays}
+                  </div>
+                );
               }
-              return (
-                <div key={weekIndex} className="grid grid-cols-7 h-12">
-                  {weekDays}
-                </div>
-              );
-            }
-          )}
+            )}
+          </div>
         </div>
       </div>
 
