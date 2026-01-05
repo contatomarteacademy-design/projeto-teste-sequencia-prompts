@@ -74,7 +74,7 @@ export default function Sidebar() {
         transition-all
         duration-300
         ease-in-out
-        ${isExpanded ? 'w-[414px]' : 'w-[80px]'}
+        ${isExpanded ? 'w-[320px]' : 'w-[80px]'}
       `}
     >
       {/* Conteúdo principal */}
@@ -87,10 +87,10 @@ export default function Sidebar() {
         py-8
         transition-all
         duration-300
-        ${isExpanded ? 'px-16' : 'px-4'}
+        ${isExpanded ? 'px-6' : 'px-4'}
       `}>
         {/* Topo - Logo e Navegação */}
-        <div className="flex flex-col gap-16">
+        <div className="flex flex-col gap-8">
           {/* Logo */}
           <div
             className={`
@@ -110,7 +110,7 @@ export default function Sidebar() {
 
           {/* Logo apenas ícone quando colapsada */}
           {!isExpanded && (
-            <div className="flex items-center justify-center h-9 mb-16">
+            <div className="flex items-center justify-center h-9 mb-8">
               <div className="w-8 h-8 bg-brand-500 rounded-full" />
             </div>
           )}
@@ -179,8 +179,8 @@ export default function Sidebar() {
 
           {/* Card de Perfil */}
           {isExpanded ? (
-            <div className="bg-neutral-200 rounded-2xl p-6 flex items-center gap-4">
-              <div className="w-16 h-16 bg-neutral-300 rounded-full flex-shrink-0" />
+            <div className="bg-neutral-200 rounded-xl p-4 flex items-center gap-4">
+              <div className="w-12 h-12 bg-neutral-300 rounded-full flex-shrink-0" />
               <div className="flex flex-col gap-1.5 flex-1 min-w-0">
                 <p className="text-label-lg font-semibold text-neutral-1100 truncate">
                   Lucas Marte
