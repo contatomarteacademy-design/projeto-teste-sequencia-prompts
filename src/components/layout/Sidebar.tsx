@@ -68,7 +68,6 @@ export default function Sidebar() {
       className={`
         relative
         bg-neutral-0
-        min-h-screen
         flex
         flex-col
         transition-all
@@ -83,7 +82,6 @@ export default function Sidebar() {
         flex
         flex-col
         justify-between
-        overflow-y-auto
         py-8
         transition-all
         duration-300

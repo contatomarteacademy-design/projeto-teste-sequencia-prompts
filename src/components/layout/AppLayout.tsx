@@ -9,7 +9,7 @@ export default function AppLayout() {
       <HeaderMobile />
 
       {/* Sidebar Desktop - aparece apenas acima de 1024px */}
-      <aside className="hidden lg:block flex-shrink-0">
+      <aside className="hidden lg:block flex-shrink-0 h-screen sticky top-0">
         <Sidebar />
       </aside>
 
