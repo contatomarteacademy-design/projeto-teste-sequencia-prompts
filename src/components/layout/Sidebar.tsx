@@ -64,7 +64,7 @@ export default function Sidebar() {
       className={`
         relative
         bg-neutral-0
-        h-full
+        h-screen
         flex
         flex-col
         transition-all
