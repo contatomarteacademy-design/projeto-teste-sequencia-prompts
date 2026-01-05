@@ -84,12 +84,6 @@ export default function DashboardHeader() {
     return 'Personalizado';
   };
 
-  const getSelectedMemberName = () => {
-    if (!selectedMember) return 'Todos';
-    const member = familyMembers.find((m) => m.id === selectedMember);
-    return member?.name || 'Todos';
-  };
-
   // Inicializar período atual ao montar
   useEffect(() => {
     const { start, end } = getCurrentMonthRange();
@@ -99,7 +93,6 @@ export default function DashboardHeader() {
 
   // Mostrar até 3 membros + botão adicionar
   const visibleMembers = familyMembers.slice(0, 3);
-  const hasMoreMembers = familyMembers.length > 3;
 
   return (
     <div className="w-full mb-6">
