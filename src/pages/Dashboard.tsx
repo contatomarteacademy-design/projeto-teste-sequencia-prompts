@@ -3,6 +3,8 @@ import DashboardHeader from '../components/dashboard/DashboardHeader';
 import CategoryExpensesCarousel from '../components/dashboard/CategoryExpensesCarousel';
 import FinancialFlowChart from '../components/dashboard/FinancialFlowChart';
 import CreditCardsWidget from '../components/dashboard/CreditCardsWidget';
+import AgendaWidget from '../components/dashboard/AgendaWidget';
+import GoalsSection from '../components/dashboard/GoalsSection';
 
 export default function Dashboard() {
   return (
@@ -18,10 +20,16 @@ export default function Dashboard() {
           <FinancialFlowChart />
         </div>
 
-        {/* Coluna Direita: Cartões */}
-        <div className="flex flex-col min-w-0 w-full">
+        {/* Coluna Direita: Cartões e Agenda */}
+        <div className="flex flex-col gap-8 min-w-0 w-full">
           <CreditCardsWidget />
+          <AgendaWidget />
         </div>
+      </div>
+
+      {/* Seção de Objetivos */}
+      <div className="mt-8 w-full min-w-0">
+        <GoalsSection />
       </div>
     </div>
   );

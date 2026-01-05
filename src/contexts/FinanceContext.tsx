@@ -5,6 +5,7 @@ import {
   CreditCard,
   BankAccount,
   FamilyMember,
+  CalendarEvent,
 } from '../types';
 import { generateMockData } from '../utils/mockData';
 
@@ -32,6 +33,7 @@ interface FinanceContextType {
   creditCards: CreditCard[];
   bankAccounts: BankAccount[];
   familyMembers: FamilyMember[];
+  calendarEvents: CalendarEvent[];
 
   // Filtros globais
   selectedMember: string | null;
@@ -97,6 +99,7 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
   const [creditCards, setCreditCards] = useState<CreditCard[]>(mockData.creditCards);
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>(mockData.bankAccounts);
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>(mockData.familyMembers);
+  const [calendarEvents] = useState<CalendarEvent[]>(mockData.calendarEvents || []);
 
   // Filtros globais
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
@@ -324,6 +327,7 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     creditCards,
     bankAccounts,
     familyMembers,
+    calendarEvents,
 
     // Filtros globais
     selectedMember,

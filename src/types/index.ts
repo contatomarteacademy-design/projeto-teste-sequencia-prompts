@@ -89,3 +89,13 @@ export interface FamilyMember {
   monthlyIncome?: number; // Renda mensal estimada (opcional)
 }
 
+/**
+ * Entidade CalendarEvent - Representa um evento na agenda
+ */
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  date: Date;
+  type?: 'bill' | 'reminder' | 'goal'; // Tipo de evento (opcional)
+}
+

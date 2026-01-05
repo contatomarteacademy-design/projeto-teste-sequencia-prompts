@@ -5,6 +5,7 @@ import {
   CreditCard,
   BankAccount,
   FamilyMember,
+  CalendarEvent,
 } from '../types';
 
 // Gera uma data no mês atual (para garantir que apareçam no filtro padrão)
@@ -162,43 +163,65 @@ export const generateMockData = () => {
   const goals: Goal[] = [
     {
       id: uuidv4(),
-      name: 'Viagem para Europa',
+      name: 'Viagem Europa',
       description: 'Economizar para viagem de 15 dias',
-      targetAmount: 30000,
-      currentAmount: 12500,
-      category: 'Viagem',
-      image: undefined,
+      targetAmount: 50000,
+      currentAmount: 25000,
+      category: 'Lazer',
+      image: 'https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=400',
       deadline: new Date('2024-12-31'),
     },
     {
       id: uuidv4(),
-      name: 'Trocar o Carro',
+      name: 'Carro novo',
       description: 'Economizar para entrada de carro novo',
-      targetAmount: 50000,
-      currentAmount: 18000,
-      category: 'Automóvel',
-      image: undefined,
+      targetAmount: 100000,
+      currentAmount: 50000,
+      category: 'Transporte',
+      image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400',
       deadline: new Date('2025-06-30'),
     },
     {
       id: uuidv4(),
-      name: 'Reserva de Emergência',
-      description: 'Manter reserva de 6 meses de gastos',
-      targetAmount: 60000,
-      currentAmount: 35000,
-      category: 'Reserva',
-      image: undefined,
-      deadline: undefined,
+      name: 'Casa própria',
+      description: 'Economizar para entrada de casa',
+      targetAmount: 500000,
+      currentAmount: 250000,
+      category: 'Moradia',
+      image: 'https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=400',
+      deadline: new Date('2026-12-31'),
     },
     {
       id: uuidv4(),
-      name: 'Reforma da Casa',
-      description: 'Economizar para reforma da cozinha',
-      targetAmount: 25000,
-      currentAmount: 8500,
-      category: 'Casa',
-      image: undefined,
-      deadline: new Date('2024-10-31'),
+      name: 'Reserva de emergência',
+      description: 'Manter reserva de 6 meses de gastos',
+      targetAmount: 50000,
+      currentAmount: 25000,
+      category: 'Reserva',
+      image: 'https://images.unsplash.com/photo-1620336655055-bd87ca8f1370?w=400',
+      deadline: undefined,
+    },
+  ];
+
+  // Eventos da agenda (Janeiro 2026)
+  const calendarEvents: CalendarEvent[] = [
+    {
+      id: uuidv4(),
+      title: 'Conta de Luz',
+      date: new Date(2026, 0, 24), // 24 de janeiro de 2026
+      type: 'bill',
+    },
+    {
+      id: uuidv4(),
+      title: 'Conta de Água',
+      date: new Date(2026, 0, 24), // 24 de janeiro de 2026
+      type: 'bill',
+    },
+    {
+      id: uuidv4(),
+      title: 'Internet',
+      date: new Date(2026, 0, 28), // 28 de janeiro de 2026
+      type: 'bill',
     },
   ];
 
@@ -208,6 +231,7 @@ export const generateMockData = () => {
     creditCards,
     bankAccounts,
     familyMembers,
+    calendarEvents,
   };
 };
 
