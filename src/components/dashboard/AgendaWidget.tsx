@@ -122,7 +122,7 @@ export default function AgendaWidget() {
         </div>
 
         {/* Grid do Calendário */}
-        <div className="px-3 py-0">
+        <div className="px-6 py-6">
           {/* Dias da semana */}
           <div className="grid grid-cols-7 h-12 mb-0">
             {weekDays.map((day, index) => (
