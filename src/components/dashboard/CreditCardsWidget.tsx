@@ -100,7 +100,7 @@ export default function CreditCardsWidget() {
   const { creditCards } = useFinance();
 
   return (
-    <div className="flex flex-col gap-4 w-full">
+    <div className="flex flex-col gap-4 w-full min-w-0">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-[14px]">

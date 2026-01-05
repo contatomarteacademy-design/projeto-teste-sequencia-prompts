@@ -60,7 +60,7 @@ export default function FinancialFlowChart() {
   }, []);
 
   return (
-    <div className="bg-neutral-0 rounded-xl px-8 py-[39px] w-full">
+    <div className="bg-neutral-0 rounded-xl px-8 py-[39px] w-full min-w-0 overflow-hidden">
       {/* Header com título e legenda */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-[14px]">
@@ -88,7 +88,7 @@ export default function FinancialFlowChart() {
       </div>
 
       {/* Gráfico */}
-      <div style={{ height: '300px', width: '100%' }}>
+      <div className="w-full" style={{ height: '300px' }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={mockData}

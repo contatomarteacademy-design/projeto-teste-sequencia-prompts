@@ -76,7 +76,7 @@ export default function CategoryExpensesCarousel() {
   }
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full min-w-0 overflow-hidden">
       {/* Seta Esquerda */}
       {canScrollLeft && (
         <button
@@ -91,7 +91,7 @@ export default function CategoryExpensesCarousel() {
       {/* Carrossel */}
       <div
         ref={carouselRef}
-        className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide"
+        className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide w-full"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
