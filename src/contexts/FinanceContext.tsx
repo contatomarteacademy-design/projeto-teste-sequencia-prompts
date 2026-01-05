@@ -19,6 +19,12 @@ interface ExpenseByCategory {
   percentage: number;
 }
 
+interface MonthlyFlow {
+  month: number; // 0-11 (janeiro a dezembro)
+  income: number;
+  expenses: number;
+}
+
 interface FinanceContextType {
   // Arrays principais
   transactions: Transaction[];
@@ -72,6 +78,7 @@ interface FinanceContextType {
   calculateExpensesByCategory: () => ExpenseByCategory[];
   calculateCategoryPercentage: (category: string) => number;
   calculateSavingsRate: () => number;
+  calculateMonthlyFlow: () => MonthlyFlow[];
 }
 
 const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
@@ -282,6 +289,34 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     return Number(((savings / income) * 100).toFixed(1));
   };
 
+  const calculateMonthlyFlow = (): MonthlyFlow[] => {
+    const filtered = getFilteredTransactions();
+    const monthlyData: MonthlyFlow[] = [];
+
+    // Inicializar todos os meses com 0
+    for (let month = 0; month < 12; month++) {
+      monthlyData.push({
+        month,
+        income: 0,
+        expenses: 0,
+      });
+    }
+
+    // Agrupar transações por mês
+    filtered.forEach((transaction) => {
+      const date = new Date(transaction.date);
+      const month = date.getMonth();
+
+      if (transaction.type === 'income') {
+        monthlyData[month].income += transaction.amount;
+      } else if (transaction.type === 'expense') {
+        monthlyData[month].expenses += transaction.amount;
+      }
+    });
+
+    return monthlyData;
+  };
+
   const value: FinanceContextType = {
     // Arrays principais
     transactions,
@@ -327,6 +362,7 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     calculateExpensesByCategory,
     calculateCategoryPercentage,
     calculateSavingsRate,
+    calculateMonthlyFlow,
   };
 
   return (

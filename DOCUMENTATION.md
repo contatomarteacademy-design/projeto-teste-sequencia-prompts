@@ -9,7 +9,7 @@
 - [x] PROMPT 5: Cards de Resumo Financeiro
 - [x] PROMPT 6: Header do Dashboard com Controles
 - [x] PROMPT 7: Carrossel de Gastos por Categoria
-- [ ] PROMPT 8: Gráfico de Fluxo Financeiro
+- [x] PROMPT 8: Gráfico de Fluxo Financeiro
 - [ ] PROMPT 9: Widget de Cartões de Crédito
 - [ ] PROMPT 10: Widget de Calendário e Agenda
 - [ ] PROMPT 11: Seção de Objetivos Financeiros
@@ -813,9 +813,9 @@
 
 ### Commit
 
-**Hash**: (consulte git log para hash mais recente)  
+**Hash**: b9709e0  
 **Mensagem**: feat: carrossel de gastos por categoria  
-**Status**: ⏳ Aguardando commit automático
+**Status**: ✅ Commit realizado e push para GitHub concluído
 
 ### Arquivos Criados
 

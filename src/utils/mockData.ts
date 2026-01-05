@@ -7,13 +7,13 @@ import {
   FamilyMember,
 } from '../types';
 
-// Gera uma data nos últimos 3 meses
-const getRandomDateInLast3Months = (): Date => {
+// Gera uma data no mês atual (para garantir que apareçam no filtro padrão)
+const getRandomDateInCurrentMonth = (): Date => {
   const now = new Date();
-  const threeMonthsAgo = new Date();
-  threeMonthsAgo.setMonth(now.getMonth() - 3);
-  const timeDiff = now.getTime() - threeMonthsAgo.getTime();
-  const randomTime = threeMonthsAgo.getTime() + Math.random() * timeDiff;
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  const timeDiff = lastDayOfMonth.getTime() - firstDayOfMonth.getTime();
+  const randomTime = firstDayOfMonth.getTime() + Math.random() * timeDiff;
   return new Date(randomTime);
 };
 
@@ -106,16 +106,6 @@ export const generateMockData = () => {
 
   // Categorias brasileiras
   const incomeCategories = ['Salário', 'Freelance', 'Investimentos', 'Outros'];
-  const expenseCategories = [
-    'Alimentação',
-    'Transporte',
-    'Moradia',
-    'Saúde',
-    'Educação',
-    'Lazer',
-    'Vestuário',
-    'Outros',
-  ];
 
   // Transações
   const transactions: Transaction[] = [];
@@ -129,7 +119,7 @@ export const generateMockData = () => {
       amount,
       description: `Salário do mês ${index + 1}`,
       category: incomeCategories[index % incomeCategories.length],
-      date: getRandomDateInLast3Months(),
+      date: getRandomDateInCurrentMonth(),
       accountId: accountIds[0],
       memberId: memberIds[index % memberIds.length],
       installments: 1,
@@ -137,23 +127,34 @@ export const generateMockData = () => {
     });
   });
 
-  // Despesas
-  const expenseAmounts = [
-    450, 320, 280, 150, 120, 890, 650, 420, 380, 250, 180, 1200, 980, 750,
-    550, 420, 350, 280, 220, 180, 150, 120, 95, 75,
+  // Despesas - Garantindo pelo menos 10 categorias com valores significativos
+  const expenseData = [
+    { category: 'Alimentação', amounts: [1200, 850, 650, 450, 320, 280, 150] },
+    { category: 'Transporte', amounts: [450, 320, 280, 150, 120, 95] },
+    { category: 'Moradia', amounts: [4000, 3500, 2800, 1200] },
+    { category: 'Saúde', amounts: [850, 650, 420, 380, 250, 180] },
+    { category: 'Educação', amounts: [1200, 980, 750, 550, 420] },
+    { category: 'Lazer', amounts: [650, 420, 380, 250, 180, 150, 120] },
+    { category: 'Vestuário', amounts: [550, 420, 350, 280, 220, 180] },
+    { category: 'Compras', amounts: [890, 750, 550, 420, 350, 280, 220] },
+    { category: 'Serviços', amounts: [450, 320, 280, 150, 120, 95, 75] },
+    { category: 'Outros', amounts: [350, 280, 220, 180, 150, 120, 95] },
   ];
-  expenseAmounts.forEach((amount, index) => {
-    transactions.push({
-      id: uuidv4(),
-      type: 'expense',
-      amount,
-      description: `Despesa ${expenseCategories[index % expenseCategories.length]}`,
-      category: expenseCategories[index % expenseCategories.length],
-      date: getRandomDateInLast3Months(),
-      accountId: index % 3 === 0 ? cardIds[index % cardIds.length] : accountIds[0],
-      memberId: memberIds[index % memberIds.length],
-      installments: index % 5 === 0 ? 3 : 1,
-      status: index % 3 === 0 ? 'pending' : 'completed',
+
+  expenseData.forEach(({ category, amounts }) => {
+    amounts.forEach((amount) => {
+      transactions.push({
+        id: uuidv4(),
+        type: 'expense',
+        amount,
+        description: `${category} - ${amount > 500 ? 'Gasto grande' : 'Gasto médio'}`,
+        category,
+        date: getRandomDateInCurrentMonth(),
+        accountId: Math.random() > 0.3 ? accountIds[0] : cardIds[Math.floor(Math.random() * cardIds.length)],
+        memberId: memberIds[Math.floor(Math.random() * memberIds.length)],
+        installments: Math.random() > 0.8 ? 3 : 1,
+        status: Math.random() > 0.7 ? 'pending' : 'completed',
+      });
     });
   });
 
