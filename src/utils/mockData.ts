@@ -159,7 +159,7 @@ export const generateMockData = () => {
     });
   });
 
-  // Objetivos
+  // Objetivos - usando imagens do Figma
   const goals: Goal[] = [
     {
       id: uuidv4(),
@@ -168,7 +168,7 @@ export const generateMockData = () => {
       targetAmount: 50000,
       currentAmount: 25000,
       category: 'Lazer',
-      image: 'https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=400',
+      image: 'https://www.figma.com/api/mcp/asset/7b7b99ac-1e88-4482-a28a-e5fbdb26e44e',
       deadline: new Date('2024-12-31'),
     },
     {
@@ -178,7 +178,7 @@ export const generateMockData = () => {
       targetAmount: 100000,
       currentAmount: 50000,
       category: 'Transporte',
-      image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400',
+      image: 'https://www.figma.com/api/mcp/asset/66eb9d05-0949-445c-9cf9-18833db3a296',
       deadline: new Date('2025-06-30'),
     },
     {
@@ -188,7 +188,7 @@ export const generateMockData = () => {
       targetAmount: 500000,
       currentAmount: 250000,
       category: 'Moradia',
-      image: 'https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=400',
+      image: 'https://www.figma.com/api/mcp/asset/7b7b99ac-1e88-4482-a28a-e5fbdb26e44e',
       deadline: new Date('2026-12-31'),
     },
     {
@@ -198,7 +198,7 @@ export const generateMockData = () => {
       targetAmount: 50000,
       currentAmount: 25000,
       category: 'Reserva',
-      image: 'https://images.unsplash.com/photo-1620336655055-bd87ca8f1370?w=400',
+      image: 'https://www.figma.com/api/mcp/asset/f98d3e43-c0e8-4354-a5e5-a726457f6dc7',
       deadline: undefined,
     },
   ];

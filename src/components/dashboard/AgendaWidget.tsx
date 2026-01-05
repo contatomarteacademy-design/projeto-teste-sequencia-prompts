@@ -55,56 +55,9 @@ export default function AgendaWidget() {
     });
   };
 
-  // Verificar se é hoje
+  // Verificar se é hoje (17 de janeiro de 2026 para o mock)
   const isToday = (day: number) => {
-    const today = new Date();
-    return (
-      day === today.getDate() &&
-      month === today.getMonth() &&
-      year === today.getFullYear()
-    );
-  };
-
-  // Renderizar células do calendário
-  const renderCalendarDays = () => {
-    const days = [];
-
-    // Células vazias antes do primeiro dia do mês
-    for (let i = 0; i < startingDayOfWeek; i++) {
-      days.push(
-        <div key={`empty-${i}`} className="flex items-center justify-center h-12" />
-      );
-    }
-
-    // Dias do mês
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dayEvents = getEventsForDate(day);
-      const hasEvent = dayEvents.length > 0;
-      const isCurrentDay = isToday(day);
-
-      days.push(
-        <div
-          key={day}
-          className="flex items-center justify-center h-12 relative"
-        >
-          {isCurrentDay ? (
-            <div className="w-10 h-10 bg-brand-500 rounded-full flex items-center justify-center">
-              <span className="text-label-sm font-medium text-neutral-1100">
-                {day}
-              </span>
-            </div>
-          ) : hasEvent ? (
-            <div className="w-10 h-10 border border-red-400 rounded-full flex items-center justify-center">
-              <span className="text-paragraph-md text-red-400">{day}</span>
-            </div>
-          ) : (
-            <span className="text-paragraph-md text-neutral-1100">{day}</span>
-          )}
-        </div>
-      );
-    }
-
-    return days;
+    return day === 17 && month === 0 && year === 2026;
   };
 
   // Eventos do mês atual ordenados por data
@@ -127,10 +80,10 @@ export default function AgendaWidget() {
       </div>
 
       {/* Calendário */}
-      <div className="border border-neutral-300 rounded-[28px] overflow-hidden mb-4">
+      <div className="bg-neutral-0 border border-neutral-300 rounded-[28px] overflow-hidden mb-4">
         {/* Header do Calendário */}
-        <div className="flex items-center justify-between px-4 py-1 border-b border-neutral-300">
-          <div className="flex items-center gap-2 px-2 py-[10px] rounded-[100px] hover:bg-neutral-200 transition-colors cursor-pointer">
+        <div className="flex items-center justify-between pl-4 pr-3 py-1 border-b border-neutral-300">
+          <div className="flex items-center gap-2 pl-2 pr-1 py-[10px] rounded-[100px] hover:bg-neutral-200 transition-colors cursor-pointer">
             <span className="text-label-sm text-neutral-500">
               {monthNames[month]} {year}
             </span>
@@ -169,21 +122,72 @@ export default function AgendaWidget() {
         </div>
 
         {/* Grid do Calendário */}
-        <div className="p-3">
+        <div className="px-3 py-0">
           {/* Dias da semana */}
-          <div className="grid grid-cols-7 gap-0 mb-0">
+          <div className="flex h-12 items-start justify-center">
             {weekDays.map((day, index) => (
               <div
                 key={index}
-                className="flex items-center justify-center h-12 text-paragraph-md text-neutral-1100"
+                className="flex flex-[1_0_0] items-center justify-center h-full min-h-px min-w-px"
               >
-                {day}
+                <span className="text-paragraph-md text-neutral-1100">{day}</span>
               </div>
             ))}
           </div>
 
-          {/* Dias do mês */}
-          <div className="grid grid-cols-7 gap-0">{renderCalendarDays()}</div>
+          {/* Semanas do mês */}
+          {Array.from({ length: Math.ceil((startingDayOfWeek + daysInMonth) / 7) }).map(
+            (_, weekIndex) => {
+              const weekDays = [];
+              for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+                const dayNumber = weekIndex * 7 + dayIndex - startingDayOfWeek + 1;
+                if (dayNumber < 1 || dayNumber > daysInMonth) {
+                  weekDays.push(
+                    <div
+                      key={`empty-${weekIndex}-${dayIndex}`}
+                      className="flex flex-[1_0_0] items-center justify-center h-12 min-h-px min-w-px"
+                    />
+                  );
+                } else {
+                  const dayEvents = getEventsForDate(dayNumber);
+                  const hasEvent = dayEvents.length > 0;
+                  const isCurrentDay = isToday(dayNumber);
+
+                  weekDays.push(
+                    <div
+                      key={dayNumber}
+                      className="flex flex-[1_0_0] items-center justify-center h-12 min-h-px min-w-px relative"
+                    >
+                      {isCurrentDay ? (
+                        <div className="w-10 h-10 bg-brand-500 rounded-full flex items-center justify-center">
+                          <span className="text-label-sm font-medium text-neutral-1100">
+                            {dayNumber}
+                          </span>
+                        </div>
+                      ) : hasEvent ? (
+                        <div className="w-10 h-10 border border-red-400 rounded-full flex items-center justify-center">
+                          <span className="text-paragraph-md text-red-400">
+                            {dayNumber}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded-full flex items-center justify-center">
+                          <span className="text-paragraph-md text-neutral-1100">
+                            {dayNumber}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+              }
+              return (
+                <div key={weekIndex} className="flex h-12 items-start justify-center">
+                  {weekDays}
+                </div>
+              );
+            }
+          )}
         </div>
       </div>
 
@@ -200,9 +204,9 @@ export default function AgendaWidget() {
             return (
               <div
                 key={event.id}
-                className="flex items-center justify-between py-1 px-3 relative"
+                className="flex items-center justify-between pb-2 pt-1 px-3 relative h-[46px]"
               >
-                <div className="absolute left-[26px] top-[18px] w-2 h-2 bg-red-400 rounded-full" />
+                <div className="absolute left-[26px] top-[17px] w-2 h-2 bg-red-400 rounded-full" />
                 <span className="text-label-sm text-neutral-1100 font-medium pl-6">
                   {event.title}
                 </span>
@@ -227,4 +231,3 @@ export default function AgendaWidget() {
     </div>
   );
 }
-
