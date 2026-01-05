@@ -6,6 +6,7 @@ import {
   BankAccount,
   FamilyMember,
   CalendarEvent,
+  Bill,
 } from '../types';
 import { generateMockData } from '../utils/mockData';
 
@@ -34,6 +35,7 @@ interface FinanceContextType {
   bankAccounts: BankAccount[];
   familyMembers: FamilyMember[];
   calendarEvents: CalendarEvent[];
+  bills: Bill[];
 
   // Filtros globais
   selectedMember: string | null;
@@ -65,6 +67,11 @@ interface FinanceContextType {
   addFamilyMember: (member: FamilyMember) => void;
   updateFamilyMember: (id: string, member: Partial<FamilyMember>) => void;
   deleteFamilyMember: (id: string) => void;
+
+  // Funções CRUD - Bills
+  addBill: (bill: Bill) => void;
+  updateBill: (id: string, bill: Partial<Bill>) => void;
+  deleteBill: (id: string) => void;
 
   // Funções de filtro
   setSelectedMember: (memberId: string | null) => void;
@@ -100,6 +107,7 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>(mockData.bankAccounts);
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>(mockData.familyMembers);
   const [calendarEvents] = useState<CalendarEvent[]>(mockData.calendarEvents || []);
+  const [bills, setBills] = useState<Bill[]>(mockData.bills || []);
 
   // Filtros globais
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
@@ -183,6 +191,19 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
 
   const deleteFamilyMember = (id: string) => {
     setFamilyMembers((prev) => prev.filter((m) => m.id !== id));
+  };
+
+  // Funções CRUD - Bills
+  const addBill = (bill: Bill) => {
+    setBills((prev) => [...prev, bill]);
+  };
+
+  const updateBill = (id: string, updates: Partial<Bill>) => {
+    setBills((prev) => prev.map((b) => (b.id === id ? { ...b, ...updates } : b)));
+  };
+
+  const deleteBill = (id: string) => {
+    setBills((prev) => prev.filter((b) => b.id !== id));
   };
 
   // Funções de cálculo derivadas
@@ -328,6 +349,7 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     bankAccounts,
     familyMembers,
     calendarEvents,
+    bills,
 
     // Filtros globais
     selectedMember,
@@ -351,6 +373,9 @@ export function FinanceProvider({ children }: FinanceProviderProps) {
     addFamilyMember,
     updateFamilyMember,
     deleteFamilyMember,
+    addBill,
+    updateBill,
+    deleteBill,
 
     // Funções de filtro
     setSelectedMember,

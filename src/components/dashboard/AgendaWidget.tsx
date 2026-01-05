@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { FiChevronLeft, FiChevronRight, FiBarChart2 } from 'react-icons/fi';
-import { FiPlus, FiArrowRight } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiCalendar } from 'react-icons/fi';
+import { FiPlus, FiArrowRight, FiCheck } from 'react-icons/fi';
 import { useFinance } from '../../contexts/FinanceContext';
+import { Bill } from '../../types';
 
 export default function AgendaWidget() {
-  const { calendarEvents } = useFinance();
-  const events = calendarEvents;
+  const { bills, updateBill } = useFinance();
   const [currentDate, setCurrentDate] = useState(new Date(2026, 0, 1)); // Janeiro 2026
+  const [selectedDay, setSelectedDay] = useState<number | null>(17); // Dia 17 como padrão (hoje)
 
   const monthNames = [
     'Janeiro',
@@ -23,7 +24,7 @@ export default function AgendaWidget() {
     'Dezembro',
   ];
 
-  const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -32,50 +33,85 @@ export default function AgendaWidget() {
   const firstDayOfMonth = new Date(year, month, 1);
   const lastDayOfMonth = new Date(year, month + 1, 0);
   const daysInMonth = lastDayOfMonth.getDate();
-  const startingDayOfWeek = firstDayOfMonth.getDay();
+  const startingDayOfWeek = firstDayOfMonth.getDay(); // 0 = Domingo
 
   // Navegação entre meses
   const goToPreviousMonth = () => {
     setCurrentDate(new Date(year, month - 1, 1));
+    setSelectedDay(null); // Limpar seleção ao mudar de mês
   };
 
   const goToNextMonth = () => {
     setCurrentDate(new Date(year, month + 1, 1));
+    setSelectedDay(null); // Limpar seleção ao mudar de mês
   };
 
-  // Verificar se uma data tem evento
-  const getEventsForDate = (day: number) => {
-    return events.filter((event) => {
-      const eventDate = new Date(event.date);
+  // Verificar se uma data tem contas pendentes
+  const hasPendingBills = (day: number): boolean => {
+    const dayDate = new Date(year, month, day);
+    return bills.some(
+      (bill) =>
+        bill.status === 'pending' &&
+        bill.dueDate.getDate() === dayDate.getDate() &&
+        bill.dueDate.getMonth() === dayDate.getMonth() &&
+        bill.dueDate.getFullYear() === dayDate.getFullYear()
+    );
+  };
+
+  // Verificar se é hoje (17 de janeiro de 2026 para o mock)
+  const isToday = (day: number): boolean => {
+    const today = new Date();
+    return (
+      day === today.getDate() &&
+      month === today.getMonth() &&
+      year === today.getFullYear()
+    );
+  };
+
+  // Obter contas do dia selecionado
+  const getBillsForDay = (day: number | null): Bill[] => {
+    if (day === null) return [];
+
+    const dayDate = new Date(year, month, day);
+    return bills.filter((bill) => {
+      const billDate = new Date(bill.dueDate);
       return (
-        eventDate.getDate() === day &&
-        eventDate.getMonth() === month &&
-        eventDate.getFullYear() === year
+        billDate.getDate() === dayDate.getDate() &&
+        billDate.getMonth() === dayDate.getMonth() &&
+        billDate.getFullYear() === dayDate.getFullYear()
       );
     });
   };
 
-  // Verificar se é hoje (17 de janeiro de 2026 para o mock)
-  const isToday = (day: number) => {
-    return day === 17 && month === 0 && year === 2026;
+  const selectedDayBills = getBillsForDay(selectedDay);
+
+  // Marcar conta como paga
+  const markBillAsPaid = (billId: string) => {
+    updateBill(billId, { status: 'paid' });
   };
 
-  // Eventos do mês atual ordenados por data
-  const currentMonthEvents = events
-    .filter((event) => {
-      const eventDate = new Date(event.date);
-      return (
-        eventDate.getMonth() === month && eventDate.getFullYear() === year
-      );
-    })
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .slice(0, 3); // Apenas os 3 primeiros
+  // Formatar data em português
+  const formatDate = (day: number): string => {
+    const date = new Date(year, month, day);
+    return date.toLocaleDateString('pt-BR', {
+      day: 'numeric',
+      month: 'long',
+    });
+  };
+
+  // Formatar valor monetário
+  const formatCurrency = (value: number): string => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
+  };
 
   return (
     <div className="bg-neutral-0 border border-neutral-300 rounded-xl p-6 w-full min-w-0">
       {/* Header */}
       <div className="flex items-center gap-[14px] mb-5">
-        <FiBarChart2 size={24} className="text-neutral-1100" />
+        <FiCalendar size={24} className="text-neutral-1100" />
         <h3 className="text-heading-xs text-neutral-1100 font-bold">Agenda</h3>
       </div>
 
@@ -150,33 +186,38 @@ export default function AgendaWidget() {
                       />
                     );
                   } else {
-                    const dayEvents = getEventsForDate(dayNumber);
-                    const hasEvent = dayEvents.length > 0;
                     const isCurrentDay = isToday(dayNumber);
+                    const isSelected = selectedDay === dayNumber;
+                    const hasPending = hasPendingBills(dayNumber);
 
                     weekDays.push(
                       <div
                         key={dayNumber}
-                        className="flex items-center justify-center h-12 relative"
+                        className="flex flex-col items-center justify-center h-12 relative"
                       >
-                        {isCurrentDay ? (
-                          <div className="w-10 h-10 bg-brand-500 rounded-full flex items-center justify-center">
-                            <span className="text-label-sm font-medium text-neutral-1100">
-                              {dayNumber}
-                            </span>
-                          </div>
-                        ) : hasEvent ? (
-                          <div className="w-10 h-10 border border-red-400 rounded-full flex items-center justify-center">
-                            <span className="text-paragraph-md text-red-400">
-                              {dayNumber}
-                            </span>
-                          </div>
-                        ) : (
-                          <div className="w-10 h-10 rounded-full flex items-center justify-center">
-                            <span className="text-paragraph-md text-neutral-1100">
-                              {dayNumber}
-                            </span>
-                          </div>
+                        <button
+                          onClick={() => setSelectedDay(dayNumber)}
+                          className={`
+                            flex items-center justify-center
+                            transition-all duration-200
+                            rounded-full
+                            w-8 h-8
+                            ${isSelected ? 'bg-brand-500' : isCurrentDay ? 'bg-neutral-500' : 'bg-transparent'}
+                            ${!isSelected && !isCurrentDay ? 'hover:bg-neutral-200' : ''}
+                          `}
+                        >
+                          <span
+                            className={`
+                              text-label-sm font-medium
+                              ${isSelected ? 'text-neutral-1100' : isCurrentDay ? 'text-neutral-0' : 'text-neutral-1100'}
+                            `}
+                          >
+                            {dayNumber}
+                          </span>
+                        </button>
+                        {/* Indicador de conta pendente - abaixo do círculo */}
+                        {hasPending && !isSelected && (
+                          <div className="absolute bottom-0 w-1.5 h-1.5 bg-red-400 rounded-full" />
                         )}
                       </div>
                     );
@@ -193,31 +234,70 @@ export default function AgendaWidget() {
         </div>
       </div>
 
-      {/* Lista de Eventos */}
-      {currentMonthEvents.length > 0 && (
-        <div className="space-y-0">
-          {currentMonthEvents.map((event) => {
-            const eventDate = new Date(event.date);
-            const day = eventDate.getDate();
-            const monthName = eventDate.toLocaleDateString('pt-BR', {
-              month: 'short',
-            });
+      {/* Lista de Contas do Dia Selecionado */}
+      {selectedDay !== null && (
+        <div className="mt-4">
+          {/* Header da seção */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-label-lg font-semibold text-neutral-1100">
+                {formatDate(selectedDay)}
+              </span>
+              {selectedDayBills.length > 0 && (
+                <span className="bg-neutral-200 text-neutral-1100 text-label-sm font-semibold px-2 py-1 rounded-full">
+                  {selectedDayBills.length}
+                </span>
+              )}
+            </div>
+          </div>
 
-            return (
-              <div
-                key={event.id}
-                className="flex items-center justify-between pb-2 pt-1 px-3 relative h-[46px]"
-              >
-                <div className="absolute left-[26px] top-[17px] w-2 h-2 bg-red-400 rounded-full" />
-                <span className="text-label-sm text-neutral-1100 font-medium pl-6">
-                  {event.title}
-                </span>
-                <span className="text-label-sm text-neutral-1100 font-medium">
-                  {day} {monthName}
-                </span>
-              </div>
-            );
-          })}
+          {/* Lista de contas ou mensagem vazia */}
+          {selectedDayBills.length > 0 ? (
+            <div className="space-y-2">
+              {selectedDayBills.map((bill) => (
+                <div
+                  key={bill.id}
+                  className="bg-neutral-200 border border-neutral-300 rounded-xl p-4 flex items-center gap-4"
+                >
+                  {/* Indicador de status */}
+                  <div
+                    className={`
+                      w-1.5 h-1.5 rounded-full flex-shrink-0
+                      ${bill.status === 'paid' ? 'bg-brand-500' : 'bg-red-400'}
+                    `}
+                  />
+
+                  {/* Descrição */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-label-sm font-semibold text-neutral-1100 truncate">
+                      {bill.description}
+                    </p>
+                    <p className="text-paragraph-sm text-neutral-500">
+                      {formatCurrency(bill.amount)}
+                    </p>
+                  </div>
+
+                  {/* Botão de check */}
+                  {bill.status === 'pending' && (
+                    <button
+                      onClick={() => markBillAsPaid(bill.id)}
+                      className="w-8 h-8 rounded-full border border-neutral-300 bg-transparent flex items-center justify-center hover:bg-brand-500 hover:border-brand-500 transition-colors flex-shrink-0 group"
+                      aria-label="Marcar como pago"
+                    >
+                      <FiCheck
+                        size={16}
+                        className="text-neutral-500 group-hover:text-neutral-0"
+                      />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="border-2 border-dashed border-neutral-300 rounded-xl p-8 text-center">
+              <p className="text-paragraph-md text-neutral-500">Nada hoje.</p>
+            </div>
+          )}
         </div>
       )}
 

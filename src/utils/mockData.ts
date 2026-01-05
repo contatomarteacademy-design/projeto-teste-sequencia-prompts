@@ -6,6 +6,7 @@ import {
   BankAccount,
   FamilyMember,
   CalendarEvent,
+  Bill,
 } from '../types';
 
 // Gera uma data no mês atual (para garantir que apareçam no filtro padrão)
@@ -225,6 +226,42 @@ export const generateMockData = () => {
     },
   ];
 
+  // Contas/Bills (Janeiro 2026)
+  const bills: Bill[] = [
+    {
+      id: uuidv4(),
+      dueDate: new Date(2026, 0, 24), // 24 de janeiro
+      description: 'Conta de Luz',
+      amount: 150.00,
+      status: 'pending',
+      type: 'fixed',
+    },
+    {
+      id: uuidv4(),
+      dueDate: new Date(2026, 0, 24), // 24 de janeiro
+      description: 'Conta de Água',
+      amount: 85.50,
+      status: 'pending',
+      type: 'fixed',
+    },
+    {
+      id: uuidv4(),
+      dueDate: new Date(2026, 0, 28), // 28 de janeiro
+      description: 'Internet',
+      amount: 99.90,
+      status: 'pending',
+      type: 'fixed',
+    },
+    {
+      id: uuidv4(),
+      dueDate: new Date(2026, 0, 5), // 5 de janeiro
+      description: 'Fatura Nubank',
+      amount: 5245.00,
+      status: 'pending',
+      type: 'card',
+    },
+  ];
+
   return {
     transactions,
     goals,
@@ -232,6 +269,7 @@ export const generateMockData = () => {
     bankAccounts,
     familyMembers,
     calendarEvents,
+    bills,
   };
 };
 

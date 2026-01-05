@@ -99,3 +99,25 @@ export interface CalendarEvent {
   type?: 'bill' | 'reminder' | 'goal'; // Tipo de evento (opcional)
 }
 
+/**
+ * Status de uma conta/bill
+ */
+export type BillStatus = 'pending' | 'paid';
+
+/**
+ * Tipo de conta/bill
+ */
+export type BillType = 'fixed' | 'card';
+
+/**
+ * Entidade Bill - Representa uma conta a pagar
+ */
+export interface Bill {
+  id: string;
+  dueDate: Date; // Data de vencimento
+  description: string; // Descrição da conta (ex: "Conta de Luz")
+  amount: number; // Valor da conta
+  status: BillStatus; // Status: pendente ou pago
+  type: BillType; // Tipo: fixa (recorrente) ou card (fatura de cartão)
+}
+
