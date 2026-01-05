@@ -972,3 +972,119 @@
 - Layout totalmente responsivo usando ResponsiveContainer do Recharts
 - Todos os estilos usam exclusivamente variáveis do design system
 - Biblioteca Recharts adicionada como dependência (aumenta bundle size, mas oferece interatividade)
+
+---
+
+## PROMPT 9: Widget de Cartões de Crédito
+
+**Status**: ✅ | **Data**: 04/01/2025 | **Build**: ✅ (1 tentativa)
+
+### Implementado
+
+- Componente `CreditCardsWidget` para exibir lista de cartões de crédito
+  - **Header:**
+    - Ícone de cartão (FiCreditCard) à esquerda
+    - Título "Cartões" em heading-xs
+    - Dois botões à direita:
+      - Botão "Adicionar" com ícone de plus (FiPlus)
+      - Botão "Ver Todos" com ícone de seta direita (FiChevronRight)
+    - Botões com fundo branco, borda cinza, hover e focus states
+  - **Lista de Cartões:**
+    - Card individual para cada cartão de crédito
+    - **Estrutura do Card:**
+      - Logo do banco (22px x 22px, rounded-[2px]) à esquerda do nome
+      - Nome do banco (extraído do nome completo, removendo "Mastercard", "Visa", etc)
+      - Últimos 4 dígitos no topo direito (**** XXXX) em label-xs
+      - Valor da fatura atual formatado em moeda brasileira (R$ X.XXX,XX) em heading-md
+      - Data de vencimento formatada:
+        - "Vence dia X" se for este mês
+        - "Vence X Mês" se for próximo mês (ex: "Vence 12 Jan")
+    - Card branco com borda cinza, padding p-6, border-radius rounded-xl
+    - Gap de 16px (gap-4) entre cards
+  - **Helper Functions:**
+    - `getBankLogo`: Retorna URL do logo baseado no nome do banco (Nubank, Inter, XP)
+    - `formatDueDate`: Formata data de vencimento baseada no dueDay do cartão
+  - **Estado Vazio:**
+    - Mensagem "Nenhum cartão cadastrado" quando não há cartões
+  - **Integração com Contexto:**
+    - Usa `creditCards` do `FinanceContext`
+    - Renderiza todos os cartões disponíveis
+- Dados Mock Atualizados
+  - Nubank: R$ 5.245,00, vence dia 21, **** 5897
+  - Inter: R$ 1.500,00, vence 12 Jan, **** 4765
+  - XP: R$ 738,97, vence 17 Jan, **** 2356
+- Integração no Dashboard
+  - Widget adicionado ao lado do gráfico de fluxo financeiro
+  - Layout em grid: 1 coluna no mobile, 2 colunas no desktop (lg:grid-cols-2)
+  - Gap de 32px (gap-8) entre os widgets
+
+### Tokens
+
+**Semânticas**: N/A (ainda não aplicadas)
+
+**Primitivas** (utilizadas):
+- Cores:
+  - `bg-neutral-0` - Fundo branco dos cards e botões
+  - `bg-neutral-200` - Fundo cinza claro no hover dos botões
+  - `border-neutral-300` - Borda dos cards e botões
+  - `text-neutral-1100` - Texto preto (título, nomes, valores, datas)
+  - `text-neutral-500` - Texto cinza para estado vazio
+  - `text-brand-500` - Verde-limão para focus ring
+- Espaçamentos:
+  - `p-6` (24px) - Padding dos cards individuais
+  - `gap-4` (16px) - Espaçamento entre cards na lista
+  - `gap-[14px]` - Espaçamento entre ícone e título no header
+  - `gap-3` (12px) - Espaçamento entre botões no header
+  - `gap-[5px]` - Espaçamento entre logo e nome do banco
+  - `p-2` (8px) - Padding dos botões
+  - `p-8` (32px) - Padding do estado vazio
+  - `gap-8` (32px) - Espaçamento entre widgets no grid do Dashboard
+- Tipografia:
+  - `text-heading-xs` - Título "Cartões"
+  - `text-paragraph-md` - Nome do banco
+  - `text-heading-md` - Valor da fatura
+  - `text-label-xs` - Últimos dígitos e data de vencimento
+  - `text-paragraph-lg` - Mensagem de estado vazio
+- Shapes:
+  - `rounded-xl` (20px) - Bordas arredondadas dos cards e botões
+  - `rounded-[2px]` - Bordas arredondadas dos logos dos bancos
+- Efeitos:
+  - `hover:bg-neutral-200` - Hover nos botões
+  - `focus:ring-2 focus:ring-brand-500 focus:ring-offset-2` - Focus ring verde-limão
+  - `transition-colors` - Transições de cor
+
+**Conversões**: 
+- `w-[22px] h-[22px]` - Tamanho dos logos dos bancos (não existe token específico, usando valor arbitrário do Tailwind baseado no design do Figma)
+- `rounded-[2px]` - Border-radius específico dos logos (não existe token específico, usando valor arbitrário do Tailwind)
+- `gap-[5px]` - Gap específico entre logo e nome (usando valor arbitrário do Tailwind)
+- URLs dos logos: usando URLs temporárias do Figma (válidas por 7 dias)
+
+### Build
+
+**Tentativas**: 1 | **Erros**: 0 | **Status**: ✅ Sucesso
+
+### Commit
+
+**Hash**: 7e46798  
+**Mensagem**: feat: widget de cartões de crédito  
+**Status**: ✅ Commit realizado e push para GitHub concluído
+
+### Arquivos Criados
+
+- `src/components/dashboard/CreditCardsWidget.tsx` - Widget de cartões de crédito
+- Arquivos modificados:
+  - `src/utils/mockData.ts` - Atualizados dados mock dos cartões (nomes, valores, dígitos, datas)
+  - `src/pages/Dashboard.tsx` - Integração do CreditCardsWidget em grid ao lado do gráfico
+
+### Notas
+
+- Widget exibe todos os cartões de crédito do contexto
+- Formatação inteligente de data de vencimento (mostra "dia X" se for este mês, "X Mês" se for próximo)
+- Logos dos bancos obtidos via helper function baseada no nome
+- Fallback para logo: mostra inicial do banco em círculo cinza se não houver logo
+- Extração automática do nome do banco (remove "Mastercard", "Visa", etc)
+- Valores formatados em moeda brasileira completa
+- Layout responsivo: 1 coluna no mobile, 2 colunas no desktop
+- Botões de ação preparados para modais/páginas futuras (PROMPT 15 e 19)
+- Todos os estilos usam exclusivamente variáveis do design system
+- Estado vazio tratado com mensagem amigável
